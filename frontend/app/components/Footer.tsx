@@ -5,24 +5,8 @@ export default function Footer() {
   
   return (
     <footer className="border-t border-gray-200 bg-white">
-      {/* Elegant Quote Section */}
-      <div className="border-b border-gray-200 py-12">
-        <div className="container">
-          <div className="text-center">
-            <blockquote className="max-w-3xl mx-auto">
-              <p className="text-xl md:text-2xl font-display font-normal text-black leading-relaxed italic">
-                "Culture is not made by mixing ingredients, but by living them."
-              </p>
-              <footer className="mt-4 text-sm text-gray-500 font-mono tracking-wide">
-                — GRAVEL EDITORIAL
-              </footer>
-            </blockquote>
-          </div>
-        </div>
-      </div>
-
       {/* Newsletter Section */}
-      <div className="border-b border-gray-200 bg-gray-50 relative overflow-hidden">
+      <div className="border-b border-gray-200 bg-white relative overflow-hidden">
         {/* Subtle decorative element */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-px h-full bg-black"></div>
@@ -54,49 +38,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Main Footer Content */}
-      <div className="container py-16">
-        <div className="max-w-2xl mx-auto text-center">
-          {/* Brand Section */}
-          <Link href="/" className="block mb-6">
-            <h3 className="text-3xl font-display font-normal tracking-wide text-black">
-              GRAVEL
-            </h3>
-          </Link>
-          <p className="text-gray-600 leading-relaxed mb-6 font-serif">
-            A contemporary magazine exploring the intersection of art, culture, and ideas.
-          </p>
-          <div className="text-xs font-mono tracking-widest uppercase text-gray-500 mb-8">
-            Art • Culture • Ideas
-          </div>
 
-          {/* Simple Links */}
-          <div className="flex items-center justify-center gap-6 text-sm">
-            <Link href="/about" className="text-gray-600 hover:text-black transition-colors">
-              About
-            </Link>
-            <Link href="/newsletter" className="text-gray-600 hover:text-black transition-colors">
-              Newsletter
-            </Link>
-            <a 
-              href="https://instagram.com" 
-              className="text-gray-600 hover:text-black transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Instagram
-            </a>
-            <a 
-              href="https://twitter.com" 
-              className="text-gray-600 hover:text-black transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Twitter
-            </a>
-          </div>
-        </div>
-      </div>
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-200 bg-gray-50">

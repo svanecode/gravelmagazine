@@ -117,6 +117,90 @@ export const MorePosts = async ({skip, limit}: {skip: string; limit: number}) =>
   )
 }
 
+// Related posts component for article pages (cleaner layout)
+export const RelatedPosts = async ({skip, limit}: {skip: string; limit: number}) => {
+  const {data} = await sanityFetch({
+    query: morePostsQuery,
+    params: {skip, limit},
+  })
+
+  if (!data || data.length === 0) {
+    return (
+      <div className="text-center text-gray-500 font-serif italic">
+        No related articles found.
+      </div>
+    )
+  }
+
+  return (
+    <>
+      {data?.map((post: any) => {
+        const {_id, title, slug, excerpt, date, author, coverImage} = post
+
+        return (
+          <article key={_id} className="group">
+            <Link href={`/posts/${slug}`} className="block">
+              {/* Image */}
+              <div className="relative aspect-[4/3] overflow-hidden rounded-sm mb-3 bg-gray-100">
+                {coverImage ? (
+                  <img
+                    src={urlForImage(coverImage)?.width(400).height(300).fit('crop').url()}
+                    alt={coverImage.alt || title || ''}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <div className="text-center">
+                      <div className="text-2xl mb-1">📖</div>
+                      <span className="text-xs font-mono tracking-wide uppercase">No Image</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Content */}
+              <div className="space-y-2">
+                {/* Category */}
+                <div>
+                  <span className="text-xs font-mono tracking-widest uppercase text-gray-500">
+                    Article
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h3 className="text-lg md:text-xl font-display font-normal leading-tight text-black group-hover:text-gray-600 transition-colors">
+                  {title}
+                </h3>
+
+                {/* Excerpt */}
+                {excerpt && (
+                  <p className="text-gray-600 leading-relaxed text-sm font-serif line-clamp-2">
+                    {excerpt}
+                  </p>
+                )}
+
+                {/* Author and Date */}
+                <div className="flex items-center justify-between text-xs pt-2 border-t border-gray-100">
+                  {author && author.firstName && author.lastName && (
+                    <span className="font-medium text-gray-700 truncate">
+                      {author.firstName} {author.lastName}
+                    </span>
+                  )}
+                  {date && (
+                    <div className="text-gray-500 font-mono tracking-wide flex-shrink-0 ml-2">
+                      <DateComponent dateString={date} />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Link>
+          </article>
+        )
+      })}
+    </>
+  )
+}
+
 // Featured secondary post component (larger layout)
 const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
   const {_id, title, slug, excerpt, date, author, coverImage} = post

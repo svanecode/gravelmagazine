@@ -5,7 +5,7 @@ import {Suspense} from 'react'
 
 import Avatar from '@/app/components/Avatar'
 import CoverImage from '@/app/components/CoverImage'
-import {MorePosts} from '@/app/components/Posts'
+import {RelatedPosts} from '@/app/components/Posts'
 import PortableText from '@/app/components/PortableText'
 import {sanityFetch} from '@/sanity/lib/live'
 import {postPagesSlugs, postQuery} from '@/sanity/lib/queries'
@@ -137,11 +137,31 @@ export default async function PostPage(props: Props) {
           </article>
         </div>
       </div>
-      <div className="border-t border-gray-100 bg-gray-50">
-        <div className="container py-12 lg:py-24 grid gap-12">
-          <aside>
-            <Suspense>{await MorePosts({skip: post._id, limit: 2})}</Suspense>
-          </aside>
+      {/* Related Articles Section */}
+      <div className="bg-white border-t border-gray-200">
+        <div className="container py-16 lg:py-20">
+          <div className="max-w-6xl mx-auto">
+            {/* Section Header */}
+            <div className="text-center mb-12">
+              <div className="inline-block">
+                <span className="text-xs font-mono tracking-widest uppercase text-gray-500 border-b border-gray-300 pb-1 mb-4 block">
+                  Continue Reading
+                </span>
+                <h2 className="text-2xl md:text-3xl font-display font-normal text-black">
+                  More from GRAVEL
+                </h2>
+              </div>
+            </div>
+
+            {/* Related Posts */}
+            <aside>
+              <Suspense>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                  {await RelatedPosts({skip: post._id, limit: 3})}
+                </div>
+              </Suspense>
+            </aside>
+          </div>
         </div>
       </div>
     </>
