@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import {urlForImage} from '@/sanity/lib/utils'
 import {sanityFetch} from '@/sanity/lib/live'
 import {latestPostQuery} from '@/sanity/lib/queries'
@@ -76,12 +77,17 @@ export async function Hero() {
           {/* Right side - Image */}
           <div className="relative">
             {coverImage?.asset && (
-              <Link href={`/posts/${slug}`} className="block group">
-                <div className="relative overflow-hidden bg-gray-100">
-                  <img
-                    src={urlForImage(coverImage)?.width(800).height(600).url()}
+              <Link href={`/posts/${slug}`} className="block group focus:outline-none focus-visible:ring-2 focus-visible:ring-black/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm">
+                <div className="relative overflow-hidden bg-gray-100 aspect-[4/3]">
+                  <Image
+                    src={urlForImage(coverImage)?.width(1200).height(900).url() || ''}
                     alt={coverImage.alt || title}
-                    className="w-full h-auto aspect-[4/3] object-cover group-hover:scale-105 transition-transform duration-500"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    placeholder="blur"
+                    blurDataURL={urlForImage(coverImage)?.width(20).height(15).blur(40).url()}
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    priority
                   />
                 </div>
               </Link>

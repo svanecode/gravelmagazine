@@ -173,11 +173,9 @@ export default function CustomPortableText({
             <div className="my-16 relative">
               <div className="max-w-4xl mx-auto text-center">
                 {/* Decorative quotation marks */}
-                <div className="text-6xl md:text-8xl font-display text-brand/20 leading-none mb-4">"</div>
+                <div className="text-6xl md:text-8xl font-display text-brand/20 leading-none mb-4">&ldquo;</div>
                 <blockquote className="relative -mt-8">
-                  <p className="text-2xl md:text-4xl lg:text-5xl font-display font-normal leading-tight text-black italic px-8">
-                    {quote}
-                  </p>
+                  <p className="text-2xl md:text-4xl lg:text-5xl font-display font-normal leading-tight text-black italic px-8">{quote}</p>
                   {attribution && (
                     <footer className="mt-8 text-sm text-gray-600 font-mono tracking-widest uppercase">
                       — {attribution}
@@ -193,7 +191,7 @@ export default function CustomPortableText({
               <div className="border-l-2 border-brand pl-8 pr-4 py-6 bg-gradient-to-r from-gray-50/50 to-transparent">
                 <blockquote>
                   <p className="text-xl md:text-2xl font-display font-normal leading-relaxed text-gray-800 italic">
-                    "{quote}"
+                    &ldquo;{quote}&rdquo;
                   </p>
                   {attribution && (
                     <footer className="mt-4 text-sm text-gray-600 font-mono tracking-wide uppercase">

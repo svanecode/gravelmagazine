@@ -19,15 +19,11 @@ const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
   })
 
   return (
-    <article
-      data-sanity={attr()}
-      key={_id}
-      className="group"
-    >
-      <Link href={`/posts/${slug}`} className="block">
+    <article data-sanity={attr()} key={_id} className="group">
+      <Link href={`/posts/${slug}`} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-black/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm">
         <div className="space-y-4">
           {/* Image Section */}
-          <div className="w-full">
+          <div className="w-full relative">
             {coverImage?.asset ? (
               <div className="relative overflow-hidden bg-gray-100 aspect-[3/2]">
                 <img
@@ -35,15 +31,22 @@ const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
                   alt={coverImage.alt || title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
+                {/* Chip */}
+                <span className="absolute top-2 left-2 bg-white/85 backdrop-blur-sm text-[10px] font-mono tracking-widest uppercase px-2 py-1 rounded-sm shadow-sm border border-gray-200 text-gray-700">
+                  Article
+                </span>
               </div>
             ) : (
-              <div className="aspect-[3/2] bg-gray-100 flex items-center justify-center">
+              <div className="aspect-[3/2] bg-gray-100 flex items-center justify-center relative">
                 <div className="text-gray-400 text-center">
                   <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                   <span className="text-xs font-mono">No Image</span>
                 </div>
+                <span className="absolute top-2 left-2 bg-white/85 backdrop-blur-sm text-[10px] font-mono tracking-widest uppercase px-2 py-1 rounded-sm shadow-sm border border-gray-200 text-gray-700">
+                  Article
+                </span>
               </div>
             )}
           </div>
@@ -55,7 +58,7 @@ const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
             </h3>
 
             {excerpt && (
-                            <p className="text-gray-700 leading-relaxed line-clamp-3 text-sm font-serif">
+              <p className="text-gray-700 leading-relaxed line-clamp-3 text-sm font-serif">
                 {post.excerpt}
               </p>
             )}
@@ -216,13 +219,13 @@ const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
       data-sanity={attr()}
       className="group mb-16 pb-16 border-b border-gray-200"
     >
-      <Link href={`/posts/${slug}`} className="block">
+      <Link href={`/posts/${slug}`} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-black/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm">
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           {/* Content Section - Left */}
           <div className="lg:order-1 space-y-4">
             <div className="inline-block">
               <span className="text-xs font-mono tracking-widest uppercase text-gray-500 border-b border-gray-300 pb-1">
-                Editor's Pick
+                Editor&apos;s Pick
               </span>
             </div>
             
@@ -252,15 +255,17 @@ const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
                   alt={coverImage.alt || title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
+                <span className="absolute top-3 left-3 bg-white/85 backdrop-blur-sm text-[10px] font-mono tracking-widest uppercase px-2 py-1 rounded-sm shadow-sm border border-gray-200 text-gray-700">Feature</span>
               </div>
             ) : (
-              <div className="aspect-[3/2] bg-gray-100 flex items-center justify-center">
+              <div className="aspect-[3/2] bg-gray-100 flex items-center justify-center relative">
                 <div className="text-gray-400 text-center">
                   <svg className="w-12 h-12 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                   <span className="text-sm font-mono">No Image</span>
                 </div>
+                <span className="absolute top-3 left-3 bg-white/85 backdrop-blur-sm text-[10px] font-mono tracking-widest uppercase px-2 py-1 rounded-sm shadow-sm border border-gray-200 text-gray-700">Feature</span>
               </div>
             )}
           </div>
@@ -289,13 +294,13 @@ export const AllPosts = async () => {
 
   return (
     <Posts
-      heading="More Articles"
+      heading="Latest Stories"
       subHeading="Discover our latest stories, essays, and cultural commentary."
     >
       {featuredPost && <FeaturedPost post={featuredPost} />}
       
       {otherPosts.length > 0 && (
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
           {otherPosts.map((post: any) => (
             <Post key={post._id} post={post} />
           ))}
