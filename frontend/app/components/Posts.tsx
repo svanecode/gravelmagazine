@@ -4,8 +4,8 @@ import {sanityFetch} from '@/sanity/lib/live'
 import {morePostsQuery, allPostsQuery, featuredPostsQuery} from '@/sanity/lib/queries'
 import {Post as PostType, AllPostsQueryResult} from '@/sanity.types'
 import DateComponent from '@/app/components/Date'
+import Date from '@/app/components/Date'
 import OnBoarding from '@/app/components/Onboarding'
-import Avatar from '@/app/components/Avatar'
 import {urlForImage} from '@/sanity/lib/utils'
 import {createDataAttribute} from 'next-sanity'
 
@@ -66,8 +66,10 @@ const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
             )}
 
             <div className="pt-3 border-t border-gray-100">
-              {author && author.firstName && author.lastName && (
-                <Avatar person={author} date={date} small={true} />
+              {date && (
+                <div className="text-sm text-gray-600">
+                  <Date dateString={date} />
+                </div>
               )}
             </div>
           </div>
@@ -189,10 +191,12 @@ export const RelatedPosts = async ({skip, limit}: {skip: string; limit: number})
                   </p>
                 )}
 
-                {/* Author and Date */}
+                {/* Date only */}
                 <div className="pt-2 border-t border-gray-100">
-                  {author && author.firstName && author.lastName && (
-                    <Avatar person={author} date={date} small={true} />
+                  {date && (
+                    <div className="text-sm text-gray-600">
+                      <Date dateString={date} />
+                    </div>
                   )}
                 </div>
               </div>
@@ -385,10 +389,12 @@ const LeadStory = ({post}: {post: any}) => {
               </div>
             )}
 
-            {/* Byline */}
+            {/* Date */}
             <div className="pt-4 border-t border-gray-100">
-              {author && author.firstName && author.lastName && (
-                <Avatar person={author} date={date} />
+              {date && (
+                <div className="text-sm text-gray-600">
+                  <Date dateString={date} />
+                </div>
               )}
             </div>
           </div>
@@ -457,10 +463,12 @@ const LargeStory = ({post}: {post: any}) => {
               </p>
             )}
 
-            {/* Byline */}
+            {/* Date */}
             <div className="pt-4 border-t border-gray-100">
-              {author && author.firstName && author.lastName && (
-                <Avatar person={author} date={date} small={true} />
+              {date && (
+                <div className="text-sm text-gray-600">
+                  <Date dateString={date} />
+                </div>
               )}
             </div>
           </div>
@@ -511,10 +519,12 @@ const CompactStory = ({post}: {post: any}) => {
               </p>
             )}
 
-            {/* Byline */}
+            {/* Date */}
             <div className="pt-2 border-t border-gray-100">
-              {author && author.firstName && author.lastName && (
-                <Avatar person={author} date={date} small={true} />
+              {date && (
+                <div className="text-sm text-gray-600">
+                  <Date dateString={date} />
+                </div>
               )}
             </div>
           </div>
@@ -564,10 +574,12 @@ const MediumStory = ({post, isImageLeft}: {post: any; isImageLeft: boolean}) => 
             </p>
           )}
 
-          {/* Byline */}
+          {/* Date */}
           <div className="pt-2">
-            {author && author.firstName && author.lastName && (
-              <Avatar person={author} date={date} small={true} />
+            {date && (
+              <div className="text-sm text-gray-600">
+                <Date dateString={date} />
+              </div>
             )}
           </div>
         </div>
@@ -622,16 +634,11 @@ const ShowcasePost = ({post}: {post: any}) => {
             </p>
           )}
 
-          {/* Author Info */}
+          {/* Date */}
           <div className="pt-3 border-t border-gray-100">
-            {author && author.firstName && author.lastName && (
-              <div className="space-y-1">
-                <p className="font-serif text-sm text-black">
-                  <span className="font-medium">{author.firstName} {author.lastName}</span>
-                  {excerpt && excerpt.length > 100 && (
-                    <span className="text-gray-600"> shares some of his favorite insights from recent work.</span>
-                  )}
-                </p>
+            {date && (
+              <div className="text-sm text-gray-600">
+                <Date dateString={date} />
               </div>
             )}
           </div>
@@ -710,10 +717,12 @@ export const AllPosts = async () => {
                     )}
                   </div>
 
-                  {/* Author and Date */}
+                  {/* Date only */}
                   <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-                    {author && author.firstName && author.lastName && (
-                      <Avatar person={author} date={date} />
+                    {date && (
+                      <div className="text-sm text-gray-600">
+                        <Date dateString={date} />
+                      </div>
                     )}
                     
                     <Link 

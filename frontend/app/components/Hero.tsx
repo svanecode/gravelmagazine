@@ -4,7 +4,6 @@ import {urlForImage} from '@/sanity/lib/utils'
 import {sanityFetch} from '@/sanity/lib/live'
 import {latestPostQuery} from '@/sanity/lib/queries'
 import DateComponent from '@/app/components/Date'
-import Avatar from '@/app/components/Avatar'
 import {createDataAttribute} from 'next-sanity'
 
 export async function Hero() {
@@ -59,10 +58,12 @@ export async function Hero() {
               )}
             </div>
 
-            {/* Author and Date */}
+            {/* Date and Read More */}
             <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-              {author && author.firstName && author.lastName && (
-                <Avatar person={author} date={date} />
+              {date && (
+                <div className="text-sm text-gray-600">
+                  <DateComponent dateString={date} />
+                </div>
               )}
               
               <Link 
