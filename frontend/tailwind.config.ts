@@ -13,8 +13,10 @@ export default {
         layer: '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
       },
       colors: {
-        black: '#0d0e12',
-        white: '#fff',
+        black: '#1a1a1a',
+        white: '#fefefe',
+        brand: '#c5a572',
+        framework: '#000',
         cyan: {
           50: '#e7fefe',
           100: '#c5fcfc',
@@ -96,6 +98,14 @@ export default {
       },
       fontFamily: {
         sans: ['var(--font-inter)'],
+        display: ['Playfair Display', 'serif'],
+        mono: ['SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', 'monospace'],
+      },
+      letterSpacing: {
+        'magazine': '0.02em',
+        'wide': '0.1em',
+        'wider': '0.15em',
+        'widest': '0.2em',
       },
     },
   },

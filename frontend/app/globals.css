@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
 @import 'tailwindcss';
 
 @plugin "@tailwindcss/typography";
@@ -13,7 +14,7 @@
   --color-framework: #000;
   --color-black: #0b0b0b;
   --color-white: #fff;
-  --color-brand: #f50;
+  --color-brand: #c5a572;
   --color-blue: #0052ff;
   --color-yellow: #cdea19;
   --color-gray-50: #f6f6f8;
@@ -28,7 +29,7 @@
   --color-gray-900: #1b1d27;
   --color-gray-950: #13141b;
 
-  --font-display: 'Inter', 'sans-serif';
+  --font-display: 'Playfair Display', serif;
   --font-sans: 'Inter', 'sans-serif';
 
   --default-transition-duration: 250ms;

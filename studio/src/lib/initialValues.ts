@@ -1,8 +1,8 @@
 /**
- * Demo data used as placeholders and initial values for the blog
+ * Demo data used as placeholders and initial values for the magazine
  */
 
-export const title = 'Blog.'
+export const title = 'GRAVEL'
 
 export const description = [
   {
@@ -13,45 +13,10 @@ export const description = [
         _key: '4a58edd077880',
         _type: 'span',
         marks: [],
-        text: 'A statically generated blog example using ',
-      },
-      {
-        _key: '4a58edd077881',
-        _type: 'span',
-        marks: ['ec5b66c9b1e0'],
-        text: 'Next.js',
-      },
-      {
-        _key: '4a58edd077882',
-        _type: 'span',
-        marks: [],
-        text: ' and ',
-      },
-      {
-        _key: '4a58edd077883',
-        _type: 'span',
-        marks: ['1f8991913ea8'],
-        text: 'Sanity',
-      },
-      {
-        _key: '4a58edd077884',
-        _type: 'span',
-        marks: [],
-        text: '.',
+        text: 'A contemporary magazine exploring the intersection of art, culture, and ideas. From emerging artists to established voices, we uncover the stories that shape our creative landscape.',
       },
     ],
-    markDefs: [
-      {
-        _key: 'ec5b66c9b1e0',
-        _type: 'link',
-        href: 'https://nextjs.org/',
-      },
-      {
-        _key: '1f8991913ea8',
-        _type: 'link',
-        href: 'https://sanity.io/',
-      },
-    ],
+    markDefs: [],
     style: 'normal',
   },
 ]

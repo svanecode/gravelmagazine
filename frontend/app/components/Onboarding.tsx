@@ -32,14 +32,14 @@ const OnboardingMessage = ({message, link, type, path}: OnboardingMessageProps) 
   return (
     <>
       <div>
-        <h3 className="text-2xl font-semibold">{message.title}</h3>
-        <p className="mt-1 text-sm text-white/80">{message.description}</p>
+        <h3 className="text-2xl font-display font-normal text-black">{message.title}</h3>
+        <p className="mt-1 text-sm text-gray-600">{message.description}</p>
       </div>
 
       <div>
         {!isPresentation ? (
           <Link
-            className="inline-flex rounded-full gap-2 items-center bg-white text-brand hover:bg-brand focus:bg-brand hover:text-white focus:text-white py-3 px-6 transition-colors duration-200"
+            className="inline-flex gap-2 items-center bg-black text-white hover:bg-gray-800 py-3 px-6 transition-colors duration-200 text-sm font-medium"
             href={link.href}
             target="_blank"
           >
@@ -74,7 +74,7 @@ const OnboardingMessage = ({message, link, type, path}: OnboardingMessageProps) 
 
 export default function Onboarding() {
   return (
-    <div className="max-w-2xl mx-auto grid grid-flow-row gap-6 py-12 text-center bg-brand text-white rounded-lg p-8">
+    <div className="max-w-2xl mx-auto grid grid-flow-row gap-6 py-16 text-center border border-gray-200 rounded-lg p-12 bg-gray-50">
       <svg
         className="mx-auto h-10 w-10 text-gray-400"
         aria-hidden="true"
@@ -102,11 +102,11 @@ export default function Onboarding() {
       </svg>
       <OnboardingMessage
         message={{
-          title: 'No posts yet',
-          description: 'Get started by creating a new post.',
+          title: 'No articles yet',
+          description: 'Begin your magazine by creating your first article.',
         }}
         link={{
-          title: 'Create Post',
+          title: 'Create Article',
           href: `${studioUrl}/structure/intent/create/template=post;type=post;path=title`,
         }}
         type="post"
