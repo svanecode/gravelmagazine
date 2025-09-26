@@ -11,10 +11,10 @@ export default async function Page() {
       </Suspense>
 
       {/* More articles section */}
-      <div className="bg-gray-50">
+      <div className="bg-white">
         <div className="container">
           <div className="py-16 lg:py-20">
-            <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
+            <Suspense fallback={<div className="h-96 bg-white animate-pulse" />}>
               <AllPosts />
             </Suspense>
           </div>

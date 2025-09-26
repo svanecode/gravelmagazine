@@ -11,6 +11,8 @@ const postFields = /* groq */ `
   coverImage,
   "date": coalesce(date, _updatedAt),
   "author": author->{firstName, lastName, picture},
+  tags,
+  featured,
 `
 
 const linkReference = /* groq */ `
@@ -88,6 +90,12 @@ export const postQuery = defineQuery(`
       ${linkReference}
     }
   },
+    ${postFields}
+  }
+`)
+
+export const featuredPostsQuery = defineQuery(`
+  *[_type == "post" && featured == true && defined(slug.current)] | order(date desc, _updatedAt desc) [0...2] {
     ${postFields}
   }
 `)

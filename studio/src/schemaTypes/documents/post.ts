@@ -82,6 +82,28 @@ export const post = defineType({
       type: 'reference',
       to: [{type: 'person'}],
     }),
+    defineField({
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [
+        {
+          type: 'string',
+          validation: (rule) => rule.max(50),
+        }
+      ],
+      description: 'Add tags to categorize your post',
+      options: {
+        layout: 'tags',
+      },
+    }),
+    defineField({
+      name: 'featured',
+      title: 'Featured',
+      type: 'boolean',
+      description: 'Mark this post as featured to display in the Featured section',
+      initialValue: false,
+    }),
   ],
   // List preview configuration. https://www.sanity.io/docs/previews-list-views
   preview: {

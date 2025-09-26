@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import {sanityFetch} from '@/sanity/lib/live'
-import {morePostsQuery, allPostsQuery} from '@/sanity/lib/queries'
+import {morePostsQuery, allPostsQuery, featuredPostsQuery} from '@/sanity/lib/queries'
 import {Post as PostType, AllPostsQueryResult} from '@/sanity.types'
 import DateComponent from '@/app/components/Date'
 import OnBoarding from '@/app/components/Onboarding'
@@ -11,6 +11,7 @@ import {createDataAttribute} from 'next-sanity'
 
 const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
   const {_id, title, slug, excerpt, date, author, coverImage} = post
+  const tags = (post as any).tags
 
   const attr = createDataAttribute({
     id: _id,
@@ -29,12 +30,8 @@ const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
                 <img
                   src={urlForImage(coverImage)?.width(500).height(333).url()}
                   alt={coverImage.alt || title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover"
                 />
-                {/* Chip */}
-                <span className="absolute top-2 left-2 bg-white/85 backdrop-blur-sm text-[10px] font-mono tracking-widest uppercase px-2 py-1 rounded-sm shadow-sm border border-gray-200 text-gray-700">
-                  Article
-                </span>
               </div>
             ) : (
               <div className="aspect-[3/2] bg-gray-100 flex items-center justify-center relative">
@@ -44,28 +41,33 @@ const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
                   </svg>
                   <span className="text-xs font-mono">No Image</span>
                 </div>
-                <span className="absolute top-2 left-2 bg-white/85 backdrop-blur-sm text-[10px] font-mono tracking-widest uppercase px-2 py-1 rounded-sm shadow-sm border border-gray-200 text-gray-700">
-                  Article
-                </span>
+
               </div>
             )}
           </div>
 
           {/* Content Section */}
-          <div className="space-y-3">
-            <h3 className="text-lg md:text-xl font-display font-normal leading-tight group-hover:text-gray-600 transition-colors">
+          <div className="space-y-4">
+            {/* Tag */}
+            {tags && tags.length > 0 && (
+              <span className="text-xs font-serif tracking-wide uppercase text-gray-500 border-b border-gray-300 pb-1">
+                {tags[0]}
+              </span>
+            )}
+
+            <h3 className="font-serif text-xl leading-tight text-black group-hover:text-gray-700 transition-colors">
               {title}
             </h3>
 
             {excerpt && (
-              <p className="text-gray-700 leading-relaxed line-clamp-3 text-sm font-serif">
+              <p className="text-gray-700 leading-relaxed font-serif text-sm">
                 {post.excerpt}
               </p>
             )}
 
-            <div className="flex items-center justify-between text-sm pt-3 border-t border-gray-100">
+            <div className="pt-3 border-t border-gray-100">
               {author && author.firstName && author.lastName && (
-                <Avatar person={author} small={true} date={date} />
+                <Avatar person={author} date={date} small={true} />
               )}
             </div>
           </div>
@@ -84,20 +86,24 @@ const Posts = ({
   heading?: string
   subHeading?: string
 }) => (
-  <div>
+  <div className="max-w-7xl mx-auto px-4">
     {heading && (
-      <div className="text-center mb-12">
-        <h2 className="text-2xl md:text-3xl font-display font-normal tracking-tight text-black mb-3">
-          {heading}
-        </h2>
+      <div className="text-center mb-16">
+        <div className="flex items-center justify-center space-x-6 mb-6">
+          <div className="w-12 h-px bg-black"></div>
+          <h2 className="font-serif text-2xl md:text-3xl tracking-wide text-black">
+            {heading}
+          </h2>
+          <div className="w-12 h-px bg-black"></div>
+        </div>
         {subHeading && (
-          <p className="text-gray-600 max-w-2xl mx-auto font-serif">
+          <p className="text-gray-600 max-w-2xl mx-auto font-serif text-lg leading-relaxed">
             {subHeading}
           </p>
         )}
       </div>
     )}
-    <div className="max-w-6xl mx-auto">{children}</div>
+    <div>{children}</div>
   </div>
 )
 
@@ -139,6 +145,7 @@ export const RelatedPosts = async ({skip, limit}: {skip: string; limit: number})
     <>
       {data?.map((post: any) => {
         const {_id, title, slug, excerpt, date, author, coverImage} = post
+        const tags = (post as any).tags
 
         return (
           <article key={_id} className="group">
@@ -149,7 +156,7 @@ export const RelatedPosts = async ({skip, limit}: {skip: string; limit: number})
                   <img
                     src={urlForImage(coverImage)?.width(400).height(300).fit('crop').url()}
                     alt={coverImage.alt || title || ''}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -162,37 +169,30 @@ export const RelatedPosts = async ({skip, limit}: {skip: string; limit: number})
               </div>
 
               {/* Content */}
-              <div className="space-y-2">
-                {/* Category */}
-                <div>
-                  <span className="text-xs font-mono tracking-widest uppercase text-gray-500">
-                    Article
+              <div className="space-y-3">
+                {/* Tags */}
+                {tags && tags.length > 0 && (
+                  <span className="text-xs font-serif tracking-wide uppercase text-gray-500">
+                    {tags[0]}
                   </span>
-                </div>
+                )}
 
                 {/* Title */}
-                <h3 className="text-lg md:text-xl font-display font-normal leading-tight text-black group-hover:text-gray-600 transition-colors">
+                <h3 className="font-serif text-lg leading-tight text-black group-hover:text-gray-700 transition-colors">
                   {title}
                 </h3>
 
                 {/* Excerpt */}
                 {excerpt && (
-                  <p className="text-gray-600 leading-relaxed text-sm font-serif line-clamp-2">
-                    {excerpt}
+                  <p className="font-serif text-gray-700 leading-relaxed text-sm">
+                    {excerpt.length > 100 ? `${excerpt.substring(0, 100)}...` : excerpt}
                   </p>
                 )}
 
                 {/* Author and Date */}
-                <div className="flex items-center justify-between text-xs pt-2 border-t border-gray-100">
+                <div className="pt-2 border-t border-gray-100">
                   {author && author.firstName && author.lastName && (
-                    <span className="font-medium text-gray-700 truncate">
-                      {author.firstName} {author.lastName}
-                    </span>
-                  )}
-                  {date && (
-                    <div className="text-gray-500 font-mono tracking-wide flex-shrink-0 ml-2">
-                      <DateComponent dateString={date} />
-                    </div>
+                    <Avatar person={author} date={date} small={true} />
                   )}
                 </div>
               </div>
@@ -207,6 +207,7 @@ export const RelatedPosts = async ({skip, limit}: {skip: string; limit: number})
 // Featured secondary post component (larger layout)
 const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
   const {_id, title, slug, excerpt, date, author, coverImage} = post
+  const tags = (post as any).tags
 
   const attr = createDataAttribute({
     id: _id,
@@ -222,40 +223,68 @@ const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
       <Link href={`/posts/${slug}`} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-black/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm">
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           {/* Content Section - Left */}
-          <div className="lg:order-1 space-y-4">
-            <div className="inline-block">
-              <span className="text-xs font-mono tracking-widest uppercase text-gray-500 border-b border-gray-300 pb-1">
-                Editor&apos;s Pick
+          <div className="lg:order-1 space-y-6">
+            {/* Editorial Label */}
+            <div className="flex items-center space-x-4">
+              <div className="w-6 h-px bg-black"></div>
+              <span className="text-xs font-serif tracking-[0.2em] uppercase text-gray-600 font-light">
+                Latest
               </span>
             </div>
             
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-normal leading-tight group-hover:text-gray-600 transition-colors">
+            {/* Tags */}
+            {tags && tags.length > 0 && (
+              <span className="text-xs font-serif tracking-wide uppercase text-gray-500 border-b border-gray-300 pb-1">
+                {tags[0]}
+              </span>
+            )}
+            
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl leading-tight text-black group-hover:text-gray-700 transition-colors">
               {title}
             </h2>
 
             {excerpt && (
-              <p className="text-lg text-gray-700 leading-relaxed">
+              <p className="text-xl leading-relaxed font-serif text-gray-800">
                 {excerpt}
               </p>
             )}
 
-            <div className="flex items-center justify-between pt-4">
+            <div className="flex items-center justify-between pt-6 border-t border-gray-100">
               {author && author.firstName && author.lastName && (
-                <Avatar person={author} date={date} />
+                <div className="space-y-1">
+                  <div className="text-sm">
+                    <span className="font-serif text-gray-800">By </span>
+                    <span className="font-serif font-medium text-black">
+                      {author.firstName} {author.lastName}
+                    </span>
+                  </div>
+
+                </div>
+              )}
+              {date && (
+                <div className="text-sm font-serif text-gray-500">
+                  <DateComponent dateString={date} />
+                </div>
               )}
             </div>
           </div>
 
           {/* Image Section - Right */}
-          <div className="lg:order-2">
+          <div className="lg:order-2 space-y-3">
             {coverImage?.asset ? (
-              <div className="relative overflow-hidden bg-gray-100 aspect-[3/2]">
-                <img
-                  src={urlForImage(coverImage)?.width(600).height(400).url()}
-                  alt={coverImage.alt || title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <span className="absolute top-3 left-3 bg-white/85 backdrop-blur-sm text-[10px] font-mono tracking-widest uppercase px-2 py-1 rounded-sm shadow-sm border border-gray-200 text-gray-700">Feature</span>
+              <div className="space-y-2">
+                <div className="relative bg-gray-100 aspect-[4/5] border border-gray-200">
+                  <img
+                    src={urlForImage(coverImage)?.width(500).height(625).fit('crop').url()}
+                    alt={coverImage.alt || title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {coverImage.alt && (
+                  <p className="text-xs font-serif text-gray-500 italic leading-relaxed">
+                    {coverImage.alt}
+                  </p>
+                )}
               </div>
             ) : (
               <div className="aspect-[3/2] bg-gray-100 flex items-center justify-center relative">
@@ -265,7 +294,344 @@ const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
                   </svg>
                   <span className="text-sm font-mono">No Image</span>
                 </div>
-                <span className="absolute top-3 left-3 bg-white/85 backdrop-blur-sm text-[10px] font-mono tracking-widest uppercase px-2 py-1 rounded-sm shadow-sm border border-gray-200 text-gray-700">Feature</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </Link>
+    </article>
+  )
+}
+
+// New Yorker-style Editorial Section
+const EditorialSection = ({posts}: {posts: any[]}) => {
+  // Create varied editorial layouts without assuming categories
+  const [leadPost, secondPost, thirdPost, ...remainingPosts] = posts
+
+  return (
+    <div className="space-y-20 mt-24">
+      {/* Lead Story - Full Width with better proportions */}
+      {leadPost && <LeadStory post={leadPost} />}
+
+      {/* Secondary Stories - Asymmetrical Layout */}
+      {(secondPost || thirdPost) && (
+        <div className="border-t border-gray-200 pt-16">
+          <div className="grid lg:grid-cols-3 gap-16">
+            {/* Left: Larger Story */}
+            {secondPost && (
+              <div className="lg:col-span-2">
+                <LargeStory post={secondPost} />
+              </div>
+            )}
+            
+            {/* Right: Smaller Story */}
+            {thirdPost && (
+              <div className="lg:col-span-1">
+                <CompactStory post={thirdPost} />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Remaining Posts - Clean Grid */}
+      {remainingPosts.length > 0 && (
+        <div className="border-t border-gray-200 pt-16">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+            {remainingPosts.map((post: any) => (
+              <CompactStory key={post._id} post={post} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Lead Story Component (Full-width, text-heavy)
+const LeadStory = ({post}: {post: any}) => {
+  const {_id, title, slug, excerpt, date, author, coverImage} = post
+  const tags = (post as any).tags
+
+  return (
+    <article className="group">
+      <Link href={`/posts/${slug}`} className="block">
+        <div className="grid lg:grid-cols-5 gap-16 items-start">
+          {/* Content - Takes 3/5 */}
+          <div className="lg:col-span-3 space-y-8">
+            {/* Tags */}
+            {tags && tags.length > 0 && (
+              <div className="flex items-center space-x-4">
+                <span className="text-xs font-serif tracking-wide uppercase text-gray-500 border-b border-gray-300 pb-1">
+                  {tags[0]}
+                </span>
+              </div>
+            )}
+
+            {/* Title */}
+            <h2 className="font-serif text-3xl md:text-4xl xl:text-5xl leading-tight text-black group-hover:text-gray-700 transition-colors">
+              {title}
+            </h2>
+
+            {/* Extended Excerpt */}
+            {excerpt && (
+              <div className="space-y-4">
+                <p className="text-lg leading-relaxed font-serif text-gray-800">
+                  {excerpt}
+                </p>
+                <div className="text-sm font-serif text-gray-600 italic">
+                  Continue reading...
+                </div>
+              </div>
+            )}
+
+            {/* Byline */}
+            <div className="pt-4 border-t border-gray-100">
+              {author && author.firstName && author.lastName && (
+                <Avatar person={author} date={date} />
+              )}
+            </div>
+          </div>
+
+          {/* Image - Takes 2/5 */}
+          {coverImage?.asset && (
+            <div className="lg:col-span-2">
+              <div className="relative bg-gray-100 aspect-[4/5]">
+                <img
+                  src={urlForImage(coverImage)?.width(400).height(500).fit('crop').url()}
+                  alt={coverImage.alt || title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {coverImage.alt && (
+                <p className="text-xs font-serif text-gray-500 italic mt-2 leading-relaxed">
+                  {coverImage.alt}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </Link>
+    </article>
+  )
+}
+
+// Large Story Component (for secondary featured content)
+const LargeStory = ({post}: {post: any}) => {
+  const {_id, title, slug, excerpt, date, author, coverImage} = post
+  const tags = (post as any).tags
+
+  return (
+    <article className="group">
+      <Link href={`/posts/${slug}`} className="block">
+        <div className="space-y-6">
+          {/* Image */}
+          {coverImage?.asset && (
+            <div className="relative bg-gray-100 aspect-[5/3]">
+              <img
+                src={urlForImage(coverImage)?.width(600).height(360).fit('crop').url()}
+                alt={coverImage.alt || title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+
+          {/* Content */}
+          <div className="space-y-4">
+            {/* Tag */}
+            {tags && tags.length > 0 && (
+              <span className="text-xs font-serif tracking-wide uppercase text-gray-500">
+                {tags[0]}
+              </span>
+            )}
+
+            {/* Title */}
+            <h2 className="font-serif text-2xl md:text-3xl leading-tight text-black group-hover:text-gray-700 transition-colors">
+              {title}
+            </h2>
+
+            {/* Excerpt */}
+            {excerpt && (
+              <p className="font-serif text-lg text-gray-700 leading-relaxed">
+                {excerpt.length > 150 ? `${excerpt.substring(0, 150)}...` : excerpt}
+              </p>
+            )}
+
+            {/* Byline */}
+            <div className="pt-4 border-t border-gray-100">
+              {author && author.firstName && author.lastName && (
+                <Avatar person={author} date={date} small={true} />
+              )}
+            </div>
+          </div>
+        </div>
+      </Link>
+    </article>
+  )
+}
+
+// Compact Story Component (for smaller, elegant presentation)
+const CompactStory = ({post}: {post: any}) => {
+  const {_id, title, slug, excerpt, date, author, coverImage} = post
+  const tags = (post as any).tags
+
+  return (
+    <article className="group">
+      <Link href={`/posts/${slug}`} className="block">
+        <div className="space-y-4">
+          {/* Image */}
+          {coverImage?.asset && (
+            <div className="relative bg-gray-100 aspect-[4/3]">
+              <img
+                src={urlForImage(coverImage)?.width(400).height(300).fit('crop').url()}
+                alt={coverImage.alt || title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+
+          {/* Content */}
+          <div className="space-y-3">
+            {/* Tag */}
+            {tags && tags.length > 0 && (
+              <span className="text-xs font-serif tracking-wide uppercase text-gray-500">
+                {tags[0]}
+              </span>
+            )}
+
+            {/* Title */}
+            <h3 className="font-serif text-lg leading-tight text-black group-hover:text-gray-700 transition-colors">
+              {title}
+            </h3>
+
+            {/* Excerpt */}
+            {excerpt && (
+              <p className="font-serif text-sm text-gray-700 leading-relaxed">
+                {excerpt.length > 90 ? `${excerpt.substring(0, 90)}...` : excerpt}
+              </p>
+            )}
+
+            {/* Byline */}
+            <div className="pt-2 border-t border-gray-100">
+              {author && author.firstName && author.lastName && (
+                <Avatar person={author} date={date} small={true} />
+              )}
+            </div>
+          </div>
+        </div>
+      </Link>
+    </article>
+  )
+}
+
+// Medium Story Component
+const MediumStory = ({post, isImageLeft}: {post: any; isImageLeft: boolean}) => {
+  const {_id, title, slug, excerpt, date, author, coverImage} = post
+  const tags = (post as any).tags
+
+  return (
+    <article className="group space-y-4">
+      <Link href={`/posts/${slug}`} className="block">
+        {/* Image */}
+        {coverImage?.asset && (
+          <div className="relative bg-gray-100 aspect-[3/2] mb-4">
+            <img
+              src={urlForImage(coverImage)?.width(400).height(267).fit('crop').url()}
+              alt={coverImage.alt || title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="space-y-3">
+          {/* Tag */}
+          {tags && tags.length > 0 && (
+            <span className="text-xs font-serif tracking-wide uppercase text-gray-500">
+              {tags[0]}
+            </span>
+          )}
+
+          {/* Title */}
+          <h3 className="font-serif text-xl leading-tight text-black group-hover:text-gray-700 transition-colors">
+            {title}
+          </h3>
+
+          {/* Excerpt */}
+          {excerpt && (
+            <p className="font-serif text-gray-700 leading-relaxed text-sm">
+              {excerpt.length > 120 ? `${excerpt.substring(0, 120)}...` : excerpt}
+            </p>
+          )}
+
+          {/* Byline */}
+          <div className="pt-2">
+            {author && author.firstName && author.lastName && (
+              <Avatar person={author} date={date} small={true} />
+            )}
+          </div>
+        </div>
+      </Link>
+    </article>
+  )
+}
+
+
+
+// New Yorker-style Showcase Grid Component
+const ShowcaseGrid = ({posts}: {posts: any[]}) => {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+      {posts.map((post: any) => (
+        <ShowcasePost key={post._id} post={post} />
+      ))}
+    </div>
+  )
+}
+
+// Showcase Post Component (New Yorker style - text-focused)
+const ShowcasePost = ({post}: {post: any}) => {
+  const {_id, title, slug, excerpt, date, author, coverImage} = post
+  const tags = (post as any).tags
+
+  return (
+    <article className="group space-y-4">
+      <Link href={`/posts/${slug}`} className="block">
+        {/* Small Image */}
+        {coverImage?.asset && (
+          <div className="relative bg-gray-100 aspect-[3/2] mb-4">
+            <img
+              src={urlForImage(coverImage)?.width(300).height(200).fit('crop').url()}
+              alt={coverImage.alt || title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+
+        {/* Content - Text-focused */}
+        <div className="space-y-3">
+          {/* Title - Larger and more prominent */}
+          <h3 className="font-serif text-xl md:text-2xl leading-tight text-black group-hover:text-gray-700 transition-colors">
+            {title}
+          </h3>
+
+          {/* Longer Excerpt */}
+          {excerpt && (
+            <p className="font-serif text-base text-gray-700 leading-relaxed">
+              {excerpt.length > 140 ? `${excerpt.substring(0, 140)}...` : excerpt}
+            </p>
+          )}
+
+          {/* Author Info */}
+          <div className="pt-3 border-t border-gray-100">
+            {author && author.firstName && author.lastName && (
+              <div className="space-y-1">
+                <p className="font-serif text-sm text-black">
+                  <span className="font-medium">{author.firstName} {author.lastName}</span>
+                  {excerpt && excerpt.length > 100 && (
+                    <span className="text-gray-600"> shares some of his favorite insights from recent work.</span>
+                  )}
+                </p>
               </div>
             )}
           </div>
@@ -276,36 +642,108 @@ const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
 }
 
 export const AllPosts = async () => {
-  const {data} = await sanityFetch({query: allPostsQuery})
+  const {data: allPosts} = await sanityFetch({query: allPostsQuery})
+  const {data: featuredPosts} = await sanityFetch({query: featuredPostsQuery})
 
-  if (!data || data.length === 0) {
+  if (!allPosts || allPosts.length === 0) {
     return <OnBoarding />
   }
 
   // Skip the first post since it's featured in the hero
-  const remainingPosts = data.slice(1)
-
-  if (remainingPosts.length === 0) {
-    return null
-  }
-
-  // Feature the second post prominently, then show the rest
-  const [featuredPost, ...otherPosts] = remainingPosts
+  const latestPosts = allPosts.slice(1, 7) // Get 6 posts for 3-column grid
 
   return (
-    <Posts
-      heading="Latest Stories"
-      subHeading="Discover our latest stories, essays, and cultural commentary."
-    >
-      {featuredPost && <FeaturedPost post={featuredPost} />}
-      
-      {otherPosts.length > 0 && (
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {otherPosts.map((post: any) => (
-            <Post key={post._id} post={post} />
-          ))}
+    <div className="max-w-7xl mx-auto px-4 space-y-20">
+      {/* Latest Section */}
+      <section className="py-20">
+        <div className="text-center mb-20">
+          <h2 className="font-serif text-2xl md:text-3xl tracking-wide text-black">
+            Latest
+          </h2>
         </div>
-      )}
-    </Posts>
+        
+        {latestPosts.length > 0 && <ShowcaseGrid posts={latestPosts} />}
+      </section>
+
+      {/* Featured Sections - Each featured post gets its own section, Hero-style layout */}
+      {featuredPosts && featuredPosts.length > 0 && featuredPosts.map((featuredPost: any, index: number) => {
+        const {_id, title, slug, excerpt, date, author, coverImage} = featuredPost
+        
+        const attr = createDataAttribute({
+          id: _id,
+          type: 'post',
+          path: 'title',
+        })
+        
+        return (
+          <section key={featuredPost._id} className="border-b border-gray-200 bg-white">
+            <div className="container py-16 lg:py-24">
+              <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                {/* Left side - Content */}
+                <div className="space-y-6">
+                  {/* Category/Section label */}
+                  <div className="inline-block">
+                    <span className="text-xs font-mono tracking-widest uppercase text-gray-500 border-b border-gray-300 pb-1">
+                      Featured
+                    </span>
+                  </div>
+
+                  {/* Headline */}
+                  <div>
+                    <h1 
+                      data-sanity={attr()}
+                      className="text-4xl md:text-5xl lg:text-6xl font-display font-normal leading-tight tracking-tight text-black mb-6"
+                    >
+                      <Link 
+                        href={`/posts/${slug}`}
+                        className="hover:text-gray-700 transition-colors"
+                      >
+                        {title}
+                      </Link>
+                    </h1>
+
+                    {/* Excerpt */}
+                    {excerpt && (
+                      <p className="text-lg md:text-xl leading-relaxed text-gray-700 font-serif font-light max-w-xl">
+                        {excerpt}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Author and Date */}
+                  <div className="flex items-center justify-between pt-6 border-t border-gray-200">
+                    {author && author.firstName && author.lastName && (
+                      <Avatar person={author} date={date} />
+                    )}
+                    
+                    <Link 
+                      href={`/posts/${slug}`}
+                      className="text-sm font-medium text-black hover:text-gray-700 transition-colors border-b border-black hover:border-gray-700 pb-0.5"
+                    >
+                      Read Article →
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Right side - Image */}
+                <div className="relative">
+                  {coverImage?.asset && (
+                    <Link href={`/posts/${slug}`} className="block group focus:outline-none focus-visible:ring-2 focus-visible:ring-black/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm">
+                      <div className="relative overflow-hidden bg-gray-100 aspect-[4/3]">
+                        <img
+                          src={urlForImage(coverImage)?.width(1200).height(900).url() || ''}
+                          alt={coverImage.alt || title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+        )
+      })}
+    </div>
   )
 }

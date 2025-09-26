@@ -33,7 +33,7 @@ export async function Hero() {
             {/* Category/Section label */}
             <div className="inline-block">
               <span className="text-xs font-mono tracking-widest uppercase text-gray-500 border-b border-gray-300 pb-1">
-                Featured Article
+                Latest Article
               </span>
             </div>
 
