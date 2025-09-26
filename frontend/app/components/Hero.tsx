@@ -4,6 +4,8 @@ import {urlForImage} from '@/sanity/lib/utils'
 import {sanityFetch} from '@/sanity/lib/live'
 import {latestPostQuery} from '@/sanity/lib/queries'
 import DateComponent from '@/app/components/Date'
+import ReadingTime from '@/app/components/ReadingTime'
+import Category from '@/app/components/Category'
 import {createDataAttribute} from 'next-sanity'
 
 export async function Hero() {
@@ -15,7 +17,7 @@ export async function Hero() {
     return null
   }
 
-  const {_id, title, slug, excerpt, date, author, coverImage} = latestPost
+  const {_id, title, slug, excerpt, date, author, coverImage, category, content} = latestPost
 
   const attr = createDataAttribute({
     id: _id,
@@ -30,10 +32,16 @@ export async function Hero() {
           {/* Left side - Content */}
           <div className="space-y-6">
             {/* Category/Section label */}
-            <div className="inline-block">
+            <div className="flex items-center gap-4">
               <span className="text-xs font-mono tracking-widest uppercase text-gray-500 border-b border-gray-300 pb-1">
                 Latest Article
               </span>
+              {category && (
+                <>
+                  <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                  <Category category={category} />
+                </>
+              )}
             </div>
 
             {/* Headline */}
@@ -58,13 +66,17 @@ export async function Hero() {
               )}
             </div>
 
-            {/* Date and Read More */}
+            {/* Date, Reading Time and Read More */}
             <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-              {date && (
-                <div className="text-sm text-gray-600">
-                  <DateComponent dateString={date} />
-                </div>
-              )}
+              <div className="flex items-center gap-3 text-sm text-gray-600">
+                {date && <DateComponent dateString={date} />}
+                {content && (
+                  <>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <ReadingTime content={content} />
+                  </>
+                )}
+              </div>
               
               <Link 
                 href={`/posts/${slug}`}
@@ -78,20 +90,39 @@ export async function Hero() {
           {/* Right side - Image */}
           <div className="relative">
             {coverImage?.asset && (
-              <Link href={`/posts/${slug}`} className="block group focus:outline-none focus-visible:ring-2 focus-visible:ring-black/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm">
-                <div className="relative overflow-hidden bg-gray-100 aspect-[4/3]">
-                  <Image
-                    src={urlForImage(coverImage)?.width(1200).height(900).url() || ''}
-                    alt={coverImage.alt || title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    placeholder="blur"
-                    blurDataURL={urlForImage(coverImage)?.width(20).height(15).blur(40).url()}
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    priority
-                  />
-                </div>
-              </Link>
+              <div className="space-y-2">
+                <Link href={`/posts/${slug}`} className="block group focus:outline-none focus-visible:ring-2 focus-visible:ring-black/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm">
+                  <div className="relative overflow-hidden bg-gray-100 aspect-[4/3]">
+                    <Image
+                      src={urlForImage(coverImage)?.width(1200).height(900).url() || ''}
+                      alt={coverImage.alt || title}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      placeholder="blur"
+                      blurDataURL={urlForImage(coverImage)?.width(20).height(15).blur(40).url()}
+                      className="object-cover"
+                      priority
+                    />
+                  </div>
+                </Link>
+                {coverImage.attribution && (
+                  <p className="text-xs text-gray-500 font-mono">
+                    Photo by{' '}
+                    {coverImage.attributionUrl ? (
+                      <a 
+                        href={coverImage.attributionUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-gray-700 hover:text-black transition-colors underline"
+                      >
+                        {coverImage.attribution}
+                      </a>
+                    ) : (
+                      <span className="text-gray-700">{coverImage.attribution}</span>
+                    )}
+                  </p>
+                )}
+              </div>
             )}
           </div>
         </div>

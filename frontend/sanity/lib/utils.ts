@@ -80,3 +80,43 @@ export function dataAttr(config: DataAttributeConfig) {
     baseUrl: studioUrl,
   }).combine(config)
 }
+
+/**
+ * Calculate estimated reading time for content
+ * @param content - Portable Text content blocks
+ * @param wordsPerMinute - Average reading speed (default: 225 words/minute)
+ * @returns Estimated reading time in minutes
+ */
+export function calculateReadingTime(content: any[], wordsPerMinute: number = 225): number {
+  if (!content || !Array.isArray(content)) {
+    return 0
+  }
+
+  // Extract text from portable text blocks
+  const textContent = content
+    .filter((block) => block._type === 'block' && block.children)
+    .map((block) => 
+      block.children
+        .filter((child: any) => child._type === 'span' && child.text)
+        .map((span: any) => span.text)
+        .join(' ')
+    )
+    .join(' ')
+
+  // Count words (simple whitespace-based counting)
+  const wordCount = textContent.trim().split(/\s+/).filter(word => word.length > 0).length
+  
+  // Calculate reading time in minutes, with a minimum of 1 minute
+  const readingTime = Math.max(1, Math.ceil(wordCount / wordsPerMinute))
+  
+  return readingTime
+}
+
+/**
+ * Format reading time for display
+ * @param minutes - Reading time in minutes
+ * @returns Formatted string like "5 min read" or "1 min read"
+ */
+export function formatReadingTime(minutes: number): string {
+  return `${minutes} min read`
+}

@@ -92,7 +92,7 @@ export default function CustomPortableText({
     types: {
       // Inline Image Component
       inlineImage: ({value}: any) => {
-        const {asset, alt, caption, size = 'large', alignment = 'center'} = value
+        const {asset, alt, caption, attribution, attributionUrl, size = 'large', alignment = 'center'} = value
         
         if (!asset) return null
 
@@ -123,6 +123,23 @@ export default function CustomPortableText({
               <figcaption className="mt-3 text-sm text-gray-600 font-serif font-light italic text-center">
                 {caption}
               </figcaption>
+            )}
+            {attribution && (
+              <p className="mt-2 text-xs text-gray-500 font-mono text-center">
+                Photo by{' '}
+                {attributionUrl ? (
+                  <a 
+                    href={attributionUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-gray-700 hover:text-black transition-colors underline"
+                  >
+                    {attribution}
+                  </a>
+                ) : (
+                  <span className="text-gray-700">{attribution}</span>
+                )}
+              </p>
             )}
           </figure>
         )
@@ -156,6 +173,23 @@ export default function CustomPortableText({
                     <figcaption className="mt-2 text-sm text-gray-600 font-serif font-light italic">
                       {image.caption}
                     </figcaption>
+                  )}
+                  {image.attribution && (
+                    <p className="mt-1 text-xs text-gray-500 font-mono">
+                      Photo by{' '}
+                      {image.attributionUrl ? (
+                        <a 
+                          href={image.attributionUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="text-gray-700 hover:text-black transition-colors underline"
+                        >
+                          {image.attribution}
+                        </a>
+                      ) : (
+                        <span className="text-gray-700">{image.attribution}</span>
+                      )}
+                    </p>
                   )}
                 </figure>
               ))}

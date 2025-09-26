@@ -7,6 +7,8 @@ import Avatar from '@/app/components/Avatar'
 import CoverImage from '@/app/components/CoverImage'
 import {RelatedPosts} from '@/app/components/Posts'
 import PortableText from '@/app/components/PortableText'
+import ReadingTime from '@/app/components/ReadingTime'
+import Category from '@/app/components/Category'
 import {sanityFetch} from '@/sanity/lib/live'
 import {postPagesSlugs, postQuery} from '@/sanity/lib/queries'
 import {resolveOpenGraphImage} from '@/sanity/lib/utils'
@@ -76,10 +78,16 @@ export default async function PostPage(props: Props) {
             <div className="order-2 lg:order-1">
               <div className="max-w-xl">
                 {/* Category/Type */}
-                <div className="mb-6">
+                <div className="mb-6 flex items-center gap-4">
                   <span className="text-xs font-mono tracking-widest uppercase text-gray-500 border-b border-gray-300 pb-1">
                     Article
                   </span>
+                  {(post as any).category && (
+                    <>
+                      <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                      <Category category={(post as any).category} />
+                    </>
+                  )}
                 </div>
 
                 {/* Title */}
@@ -94,20 +102,44 @@ export default async function PostPage(props: Props) {
                   </p>
                 )}
 
-                {/* Author and Date */}
-                {post.author && post.author.firstName && post.author.lastName && (
-                  <div className="flex items-center gap-4 pt-6 border-t border-gray-200">
+                {/* Author, Date and Reading Time */}
+                <div className="pt-6 border-t border-gray-200 space-y-4">
+                  {post.author && post.author.firstName && post.author.lastName && (
                     <Avatar person={post.author} date={post.date} />
-                  </div>
-                )}
+                  )}
+                  {post.content && (
+                    <div className="text-sm text-gray-600">
+                      <ReadingTime content={post.content} />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Image Right */}
             <div className="order-1 lg:order-2">
               {post?.coverImage ? (
-                <div className="relative aspect-[4/3] lg:aspect-[5/4] overflow-hidden rounded-sm shadow-lg">
-                  <CoverImage image={post.coverImage} priority />
+                <div>
+                  <div className="relative aspect-[4/3] lg:aspect-[5/4] overflow-hidden rounded-sm shadow-lg">
+                    <CoverImage image={post.coverImage} priority />
+                  </div>
+                  {post.coverImage.attribution && (
+                    <p className="text-xs text-gray-500 mt-2 font-mono">
+                      Photo by{' '}
+                      {post.coverImage.attributionUrl ? (
+                        <a 
+                          href={post.coverImage.attributionUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="text-gray-700 hover:text-black transition-colors underline"
+                        >
+                          {post.coverImage.attribution}
+                        </a>
+                      ) : (
+                        <span className="text-gray-700">{post.coverImage.attribution}</span>
+                      )}
+                    </p>
+                  )}
                 </div>
               ) : (
                 <div className="aspect-[4/3] lg:aspect-[5/4] bg-gray-100 rounded-sm flex items-center justify-center">

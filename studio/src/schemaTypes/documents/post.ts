@@ -32,6 +32,14 @@ export const post = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'reference',
+      to: [{type: 'category'}],
+      description: 'Select the main category for this post',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: 'content',
       title: 'Content',
       type: 'blockContent',
@@ -66,6 +74,18 @@ export const post = defineType({
               return true
             })
           },
+        },
+        {
+          name: 'attribution',
+          type: 'string',
+          title: 'Photo Credit',
+          description: 'Name of the photographer or image source (e.g., "Photo by John Doe" or "Unsplash")',
+        },
+        {
+          name: 'attributionUrl',
+          type: 'url',
+          title: 'Attribution URL',
+          description: 'Optional link to the photographer\'s profile or original image source',
         },
       ],
       validation: (rule) => rule.required(),

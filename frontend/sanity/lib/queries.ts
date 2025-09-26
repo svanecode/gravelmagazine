@@ -7,12 +7,18 @@ const postFields = /* groq */ `
   "status": select(_originalId in path("drafts.**") => "draft", "published"),
   "title": coalesce(title, "Untitled"),
   "slug": slug.current,
+  "category": category->{title, slug, color},
   excerpt,
-  coverImage,
+  coverImage{
+    ...,
+    attribution,
+    attributionUrl
+  },
   "date": coalesce(date, _updatedAt),
-  "author": author->{firstName, lastName, picture},
+  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},
   tags,
   featured,
+  content,
 `
 
 const linkReference = /* groq */ `
@@ -108,4 +114,15 @@ export const postPagesSlugs = defineQuery(`
 export const pagesSlugs = defineQuery(`
   *[_type == "page" && defined(slug.current)]
   {"slug": slug.current}
+`)
+
+export const allCategoriesQuery = defineQuery(`
+  *[_type == "category"] | order(order asc, title asc) {
+    _id,
+    title,
+    slug,
+    description,
+    color,
+    order
+  }
 `)

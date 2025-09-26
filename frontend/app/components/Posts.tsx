@@ -1,16 +1,20 @@
 import Link from 'next/link'
 
 import {sanityFetch} from '@/sanity/lib/live'
-import {morePostsQuery, allPostsQuery, featuredPostsQuery} from '@/sanity/lib/queries'
+import {morePostsQuery, allPostsQuery, featuredPostsQuery, latestPostQuery} from '@/sanity/lib/queries'
 import {Post as PostType, AllPostsQueryResult} from '@/sanity.types'
 import DateComponent from '@/app/components/Date'
 import Date from '@/app/components/Date'
+import ReadingTime from '@/app/components/ReadingTime'
+import Category from '@/app/components/Category'
 import OnBoarding from '@/app/components/Onboarding'
 import {urlForImage} from '@/sanity/lib/utils'
 import {createDataAttribute} from 'next-sanity'
 
 const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
   const {_id, title, slug, excerpt, date, author, coverImage} = post
+  const category = (post as any).category
+  const content = (post as any).content
   const tags = (post as any).tags
 
   const attr = createDataAttribute({
@@ -26,12 +30,31 @@ const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
           {/* Image Section */}
           <div className="w-full relative">
             {coverImage?.asset ? (
-              <div className="relative overflow-hidden bg-gray-100 aspect-[3/2]">
-                <img
-                  src={urlForImage(coverImage)?.width(500).height(333).url()}
-                  alt={coverImage.alt || title}
-                  className="w-full h-full object-cover"
-                />
+              <div className="space-y-2">
+                <div className="relative overflow-hidden bg-gray-100 aspect-[3/2]">
+                  <img
+                    src={urlForImage(coverImage)?.width(500).height(333).url()}
+                    alt={coverImage.alt || title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {coverImage.attribution && (
+                  <p className="text-xs text-gray-500 font-mono">
+                    Photo by{' '}
+                    {coverImage.attributionUrl ? (
+                      <a 
+                        href={coverImage.attributionUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-gray-700 hover:text-black transition-colors underline"
+                      >
+                        {coverImage.attribution}
+                      </a>
+                    ) : (
+                      <span className="text-gray-700">{coverImage.attribution}</span>
+                    )}
+                  </p>
+                )}
               </div>
             ) : (
               <div className="aspect-[3/2] bg-gray-100 flex items-center justify-center relative">
@@ -48,12 +71,8 @@ const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
 
           {/* Content Section */}
           <div className="space-y-4">
-            {/* Tag */}
-            {tags && tags.length > 0 && (
-              <span className="text-xs font-serif tracking-wide uppercase text-gray-500 border-b border-gray-300 pb-1">
-                {tags[0]}
-              </span>
-            )}
+            {/* Category */}
+            {category && <Category category={category} />}
 
             <h3 className="font-serif text-xl leading-tight text-black group-hover:text-gray-700 transition-colors">
               {title}
@@ -66,11 +85,15 @@ const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
             )}
 
             <div className="pt-3 border-t border-gray-100">
-              {date && (
-                <div className="text-sm text-gray-600">
-                  <Date dateString={date} />
-                </div>
-              )}
+              <div className="flex items-center gap-3 text-sm text-gray-600">
+                {date && <Date dateString={date} />}
+                {content && (
+                  <>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <ReadingTime content={content} />
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -146,38 +169,53 @@ export const RelatedPosts = async ({skip, limit}: {skip: string; limit: number})
   return (
     <>
       {data?.map((post: any) => {
-        const {_id, title, slug, excerpt, date, author, coverImage} = post
+        const {_id, title, slug, excerpt, date, author, coverImage, category, content} = post
         const tags = (post as any).tags
 
         return (
           <article key={_id} className="group">
             <Link href={`/posts/${slug}`} className="block">
               {/* Image */}
-              <div className="relative aspect-[4/3] overflow-hidden rounded-sm mb-3 bg-gray-100">
-                {coverImage ? (
-                  <img
-                    src={urlForImage(coverImage)?.width(400).height(300).fit('crop').url()}
-                    alt={coverImage.alt || title || ''}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
-                    <div className="text-center">
-                      <div className="text-2xl mb-1">📖</div>
-                      <span className="text-xs font-mono tracking-wide uppercase">No Image</span>
+              <div className="space-y-2 mb-3">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-gray-100">
+                  {coverImage ? (
+                    <img
+                      src={urlForImage(coverImage)?.width(800).height(600).fit('crop').url()}
+                      alt={coverImage.alt || title || ''}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                      <div className="text-center">
+                        <div className="text-2xl mb-1">📖</div>
+                        <span className="text-xs font-mono tracking-wide uppercase">No Image</span>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                </div>
+                {coverImage?.attribution && (
+                  <p className="text-xs text-gray-500 font-mono">
+                    Photo by{' '}
+                    {coverImage.attributionUrl ? (
+                      <a 
+                        href={coverImage.attributionUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-gray-700 hover:text-black transition-colors underline"
+                      >
+                        {coverImage.attribution}
+                      </a>
+                    ) : (
+                      <span className="text-gray-700">{coverImage.attribution}</span>
+                    )}
+                  </p>
                 )}
               </div>
 
               {/* Content */}
               <div className="space-y-3">
-                {/* Tags */}
-                {tags && tags.length > 0 && (
-                  <span className="text-xs font-serif tracking-wide uppercase text-gray-500">
-                    {tags[0]}
-                  </span>
-                )}
+                {/* Category */}
+                {category && <Category category={category} />}
 
                 {/* Title */}
                 <h3 className="font-serif text-lg leading-tight text-black group-hover:text-gray-700 transition-colors">
@@ -191,13 +229,17 @@ export const RelatedPosts = async ({skip, limit}: {skip: string; limit: number})
                   </p>
                 )}
 
-                {/* Date only */}
+                {/* Date and Reading Time */}
                 <div className="pt-2 border-t border-gray-100">
-                  {date && (
-                    <div className="text-sm text-gray-600">
-                      <Date dateString={date} />
-                    </div>
-                  )}
+                  <div className="flex items-center gap-3 text-sm text-gray-600">
+                    {date && <Date dateString={date} />}
+                    {content && (
+                      <>
+                        <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                        <ReadingTime content={content} />
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             </Link>
@@ -211,6 +253,8 @@ export const RelatedPosts = async ({skip, limit}: {skip: string; limit: number})
 // Featured secondary post component (larger layout)
 const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
   const {_id, title, slug, excerpt, date, author, coverImage} = post
+  const category = (post as any).category
+  const content = (post as any).content
   const tags = (post as any).tags
 
   const attr = createDataAttribute({
@@ -236,12 +280,8 @@ const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
               </span>
             </div>
             
-            {/* Tags */}
-            {tags && tags.length > 0 && (
-              <span className="text-xs font-serif tracking-wide uppercase text-gray-500 border-b border-gray-300 pb-1">
-                {tags[0]}
-              </span>
-            )}
+            {/* Category */}
+            {category && <Category category={category} />}
             
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl leading-tight text-black group-hover:text-gray-700 transition-colors">
               {title}
@@ -262,14 +302,17 @@ const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
                       {author.firstName} {author.lastName}
                     </span>
                   </div>
-
                 </div>
               )}
-              {date && (
-                <div className="text-sm font-serif text-gray-500">
-                  <DateComponent dateString={date} />
-                </div>
-              )}
+              <div className="flex items-center gap-3 text-sm text-gray-500">
+                {date && <DateComponent dateString={date} />}
+                {content && (
+                  <>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <ReadingTime content={content} />
+                  </>
+                )}
+              </div>
             </div>
           </div>
 
@@ -284,6 +327,23 @@ const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
                     className="w-full h-full object-cover"
                   />
                 </div>
+                {coverImage.attribution && (
+                  <p className="text-xs text-gray-500 font-mono">
+                    Photo by{' '}
+                    {coverImage.attributionUrl ? (
+                      <a 
+                        href={coverImage.attributionUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-gray-700 hover:text-black transition-colors underline"
+                      >
+                        {coverImage.attribution}
+                      </a>
+                    ) : (
+                      <span className="text-gray-700">{coverImage.attribution}</span>
+                    )}
+                  </p>
+                )}
                 {coverImage.alt && (
                   <p className="text-xs font-serif text-gray-500 italic leading-relaxed">
                     {coverImage.alt}
@@ -307,7 +367,7 @@ const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
   )
 }
 
-// New Yorker-style Editorial Section
+// Editorial Magazine-style Section
 const EditorialSection = ({posts}: {posts: any[]}) => {
   // Create varied editorial layouts without assuming categories
   const [leadPost, secondPost, thirdPost, ...remainingPosts] = posts
@@ -354,7 +414,7 @@ const EditorialSection = ({posts}: {posts: any[]}) => {
 
 // Lead Story Component (Full-width, text-heavy)
 const LeadStory = ({post}: {post: any}) => {
-  const {_id, title, slug, excerpt, date, author, coverImage} = post
+  const {_id, title, slug, excerpt, date, author, coverImage, category, content} = post
   const tags = (post as any).tags
 
   return (
@@ -363,12 +423,10 @@ const LeadStory = ({post}: {post: any}) => {
         <div className="grid lg:grid-cols-5 gap-16 items-start">
           {/* Content - Takes 3/5 */}
           <div className="lg:col-span-3 space-y-8">
-            {/* Tags */}
-            {tags && tags.length > 0 && (
+            {/* Category */}
+            {category && (
               <div className="flex items-center space-x-4">
-                <span className="text-xs font-serif tracking-wide uppercase text-gray-500 border-b border-gray-300 pb-1">
-                  {tags[0]}
-                </span>
+                <Category category={category} />
               </div>
             )}
 
@@ -389,19 +447,23 @@ const LeadStory = ({post}: {post: any}) => {
               </div>
             )}
 
-            {/* Date */}
+            {/* Date and Reading Time */}
             <div className="pt-4 border-t border-gray-100">
-              {date && (
-                <div className="text-sm text-gray-600">
-                  <Date dateString={date} />
-                </div>
-              )}
+              <div className="flex items-center gap-3 text-sm text-gray-600">
+                {date && <Date dateString={date} />}
+                {content && (
+                  <>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <ReadingTime content={content} />
+                  </>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Image - Takes 2/5 */}
           {coverImage?.asset && (
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 space-y-2">
               <div className="relative bg-gray-100 aspect-[4/5]">
                 <img
                   src={urlForImage(coverImage)?.width(400).height(500).fit('crop').url()}
@@ -409,8 +471,25 @@ const LeadStory = ({post}: {post: any}) => {
                   className="w-full h-full object-cover"
                 />
               </div>
+              {coverImage.attribution && (
+                <p className="text-xs text-gray-500 font-mono">
+                  Photo by{' '}
+                  {coverImage.attributionUrl ? (
+                    <a 
+                      href={coverImage.attributionUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-gray-700 hover:text-black transition-colors underline"
+                    >
+                      {coverImage.attribution}
+                    </a>
+                  ) : (
+                    <span className="text-gray-700">{coverImage.attribution}</span>
+                  )}
+                </p>
+              )}
               {coverImage.alt && (
-                <p className="text-xs font-serif text-gray-500 italic mt-2 leading-relaxed">
+                <p className="text-xs font-serif text-gray-500 italic leading-relaxed">
                   {coverImage.alt}
                 </p>
               )}
@@ -424,7 +503,7 @@ const LeadStory = ({post}: {post: any}) => {
 
 // Large Story Component (for secondary featured content)
 const LargeStory = ({post}: {post: any}) => {
-  const {_id, title, slug, excerpt, date, author, coverImage} = post
+  const {_id, title, slug, excerpt, date, author, coverImage, category, content} = post
   const tags = (post as any).tags
 
   return (
@@ -433,23 +512,38 @@ const LargeStory = ({post}: {post: any}) => {
         <div className="space-y-6">
           {/* Image */}
           {coverImage?.asset && (
-            <div className="relative bg-gray-100 aspect-[5/3]">
-              <img
-                src={urlForImage(coverImage)?.width(600).height(360).fit('crop').url()}
-                alt={coverImage.alt || title}
-                className="w-full h-full object-cover"
-              />
+            <div className="space-y-2">
+              <div className="relative bg-gray-100 aspect-[5/3]">
+                <img
+                  src={urlForImage(coverImage)?.width(600).height(360).fit('crop').url()}
+                  alt={coverImage.alt || title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {coverImage.attribution && (
+                <p className="text-xs text-gray-500 font-mono">
+                  Photo by{' '}
+                  {coverImage.attributionUrl ? (
+                    <a 
+                      href={coverImage.attributionUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-gray-700 hover:text-black transition-colors underline"
+                    >
+                      {coverImage.attribution}
+                    </a>
+                  ) : (
+                    <span className="text-gray-700">{coverImage.attribution}</span>
+                  )}
+                </p>
+              )}
             </div>
           )}
 
           {/* Content */}
           <div className="space-y-4">
-            {/* Tag */}
-            {tags && tags.length > 0 && (
-              <span className="text-xs font-serif tracking-wide uppercase text-gray-500">
-                {tags[0]}
-              </span>
-            )}
+            {/* Category */}
+            {category && <Category category={category} />}
 
             {/* Title */}
             <h2 className="font-serif text-2xl md:text-3xl leading-tight text-black group-hover:text-gray-700 transition-colors">
@@ -463,13 +557,17 @@ const LargeStory = ({post}: {post: any}) => {
               </p>
             )}
 
-            {/* Date */}
+            {/* Date and Reading Time */}
             <div className="pt-4 border-t border-gray-100">
-              {date && (
-                <div className="text-sm text-gray-600">
-                  <Date dateString={date} />
-                </div>
-              )}
+              <div className="flex items-center gap-3 text-sm text-gray-600">
+                {date && <Date dateString={date} />}
+                {content && (
+                  <>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <ReadingTime content={content} />
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -480,7 +578,7 @@ const LargeStory = ({post}: {post: any}) => {
 
 // Compact Story Component (for smaller, elegant presentation)
 const CompactStory = ({post}: {post: any}) => {
-  const {_id, title, slug, excerpt, date, author, coverImage} = post
+  const {_id, title, slug, excerpt, date, author, coverImage, category, content} = post
   const tags = (post as any).tags
 
   return (
@@ -489,23 +587,38 @@ const CompactStory = ({post}: {post: any}) => {
         <div className="space-y-4">
           {/* Image */}
           {coverImage?.asset && (
-            <div className="relative bg-gray-100 aspect-[4/3]">
-              <img
-                src={urlForImage(coverImage)?.width(400).height(300).fit('crop').url()}
-                alt={coverImage.alt || title}
-                className="w-full h-full object-cover"
-              />
+            <div className="space-y-2">
+              <div className="relative bg-gray-100 aspect-[4/3]">
+                <img
+                  src={urlForImage(coverImage)?.width(800).height(600).fit('crop').url()}
+                  alt={coverImage.alt || title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {coverImage.attribution && (
+                <p className="text-xs text-gray-500 font-mono">
+                  Photo by{' '}
+                  {coverImage.attributionUrl ? (
+                    <a 
+                      href={coverImage.attributionUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-gray-700 hover:text-black transition-colors underline"
+                    >
+                      {coverImage.attribution}
+                    </a>
+                  ) : (
+                    <span className="text-gray-700">{coverImage.attribution}</span>
+                  )}
+                </p>
+              )}
             </div>
           )}
 
           {/* Content */}
           <div className="space-y-3">
-            {/* Tag */}
-            {tags && tags.length > 0 && (
-              <span className="text-xs font-serif tracking-wide uppercase text-gray-500">
-                {tags[0]}
-              </span>
-            )}
+            {/* Category */}
+            {category && <Category category={category} />}
 
             {/* Title */}
             <h3 className="font-serif text-lg leading-tight text-black group-hover:text-gray-700 transition-colors">
@@ -519,13 +632,17 @@ const CompactStory = ({post}: {post: any}) => {
               </p>
             )}
 
-            {/* Date */}
+            {/* Date and Reading Time */}
             <div className="pt-2 border-t border-gray-100">
-              {date && (
-                <div className="text-sm text-gray-600">
-                  <Date dateString={date} />
-                </div>
-              )}
+              <div className="flex items-center gap-3 text-sm text-gray-600">
+                {date && <Date dateString={date} />}
+                {content && (
+                  <>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <ReadingTime content={content} />
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -544,12 +661,31 @@ const MediumStory = ({post, isImageLeft}: {post: any; isImageLeft: boolean}) => 
       <Link href={`/posts/${slug}`} className="block">
         {/* Image */}
         {coverImage?.asset && (
-          <div className="relative bg-gray-100 aspect-[3/2] mb-4">
-            <img
-              src={urlForImage(coverImage)?.width(400).height(267).fit('crop').url()}
-              alt={coverImage.alt || title}
-              className="w-full h-full object-cover"
-            />
+          <div className="space-y-2 mb-4">
+            <div className="relative bg-gray-100 aspect-[3/2]">
+              <img
+                src={urlForImage(coverImage)?.width(800).height(533).fit('crop').url()}
+                alt={coverImage.alt || title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            {coverImage.attribution && (
+              <p className="text-xs text-gray-500 font-mono">
+                Photo by{' '}
+                {coverImage.attributionUrl ? (
+                  <a 
+                    href={coverImage.attributionUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-gray-700 hover:text-black transition-colors underline"
+                  >
+                    {coverImage.attribution}
+                  </a>
+                ) : (
+                  <span className="text-gray-700">{coverImage.attribution}</span>
+                )}
+              </p>
+            )}
           </div>
         )}
 
@@ -590,7 +726,7 @@ const MediumStory = ({post, isImageLeft}: {post: any; isImageLeft: boolean}) => 
 
 
 
-// New Yorker-style Showcase Grid Component
+// Editorial Magazine Showcase Grid Component
 const ShowcaseGrid = ({posts}: {posts: any[]}) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
@@ -601,9 +737,9 @@ const ShowcaseGrid = ({posts}: {posts: any[]}) => {
   )
 }
 
-// Showcase Post Component (New Yorker style - text-focused)
+// Showcase Post Component (Editorial magazine style - text-focused)
 const ShowcasePost = ({post}: {post: any}) => {
-  const {_id, title, slug, excerpt, date, author, coverImage} = post
+  const {_id, title, slug, excerpt, date, author, coverImage, category, content} = post
   const tags = (post as any).tags
 
   return (
@@ -611,17 +747,39 @@ const ShowcasePost = ({post}: {post: any}) => {
       <Link href={`/posts/${slug}`} className="block">
         {/* Small Image */}
         {coverImage?.asset && (
-          <div className="relative bg-gray-100 aspect-[3/2] mb-4">
-            <img
-              src={urlForImage(coverImage)?.width(300).height(200).fit('crop').url()}
-              alt={coverImage.alt || title}
-              className="w-full h-full object-cover"
-            />
+          <div className="space-y-2 mb-4">
+            <div className="relative bg-gray-100 aspect-[3/2]">
+              <img
+                src={urlForImage(coverImage)?.width(800).height(533).fit('crop').url()}
+                alt={coverImage.alt || title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            {coverImage.attribution && (
+              <p className="text-xs text-gray-500 font-mono">
+                Photo by{' '}
+                {coverImage.attributionUrl ? (
+                  <a 
+                    href={coverImage.attributionUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-gray-700 hover:text-black transition-colors underline"
+                  >
+                    {coverImage.attribution}
+                  </a>
+                ) : (
+                  <span className="text-gray-700">{coverImage.attribution}</span>
+                )}
+              </p>
+            )}
           </div>
         )}
 
         {/* Content - Text-focused */}
         <div className="space-y-3">
+          {/* Category */}
+          {category && <Category category={category} />}
+
           {/* Title - Larger and more prominent */}
           <h3 className="font-serif text-xl md:text-2xl leading-tight text-black group-hover:text-gray-700 transition-colors">
             {title}
@@ -634,13 +792,17 @@ const ShowcasePost = ({post}: {post: any}) => {
             </p>
           )}
 
-          {/* Date */}
+          {/* Date and Reading Time */}
           <div className="pt-3 border-t border-gray-100">
-            {date && (
-              <div className="text-sm text-gray-600">
-                <Date dateString={date} />
-              </div>
-            )}
+            <div className="flex items-center gap-3 text-sm text-gray-600">
+              {date && <Date dateString={date} />}
+              {content && (
+                <>
+                  <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                  <ReadingTime content={content} />
+                </>
+              )}
+            </div>
           </div>
         </div>
       </Link>
@@ -650,109 +812,120 @@ const ShowcasePost = ({post}: {post: any}) => {
 
 export const AllPosts = async () => {
   const {data: allPosts} = await sanityFetch({query: allPostsQuery})
-  const {data: featuredPosts} = await sanityFetch({query: featuredPostsQuery})
+  const {data: latestPost} = await sanityFetch({query: latestPostQuery})
 
   if (!allPosts || allPosts.length === 0) {
     return <OnBoarding />
   }
 
-  // Skip the first post since it's featured in the hero
-  const latestPosts = allPosts.slice(1, 7) // Get 6 posts for 3-column grid
+  // Skip the first post since it's shown in the hero, get next 9 posts
+  const blogPosts = allPosts.slice(1, 10)
+
+  if (blogPosts.length === 0) {
+    return null
+  }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 space-y-20">
-      {/* Latest Section */}
-      <section className="py-20">
-        <div className="text-center mb-20">
-          <h2 className="font-serif text-2xl md:text-3xl tracking-wide text-black">
-            Latest
-          </h2>
-        </div>
-        
-        {latestPosts.length > 0 && <ShowcaseGrid posts={latestPosts} />}
-      </section>
+    <div className="max-w-4xl mx-auto px-4">
+      <div className="space-y-16 py-16 lg:py-20">
+        {blogPosts.map((post: any, index: number) => {
+          const {_id, title, slug, excerpt, date, coverImage, category, content} = post
+          
+          const attr = createDataAttribute({
+            id: _id,
+            type: 'post',
+            path: 'title',
+          })
 
-      {/* Featured Sections - Each featured post gets its own section, Hero-style layout */}
-      {featuredPosts && featuredPosts.length > 0 && featuredPosts.map((featuredPost: any, index: number) => {
-        const {_id, title, slug, excerpt, date, author, coverImage} = featuredPost
-        
-        const attr = createDataAttribute({
-          id: _id,
-          type: 'post',
-          path: 'title',
-        })
-        
-        return (
-          <section key={featuredPost._id} className="border-b border-gray-200 bg-white">
-            <div className="container py-16 lg:py-24">
-              <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                {/* Left side - Content */}
-                <div className="space-y-6">
-                  {/* Category/Section label */}
-                  <div className="inline-block">
-                    <span className="text-xs font-mono tracking-widest uppercase text-gray-500 border-b border-gray-300 pb-1">
-                      Featured
-                    </span>
-                  </div>
-
-                  {/* Headline */}
-                  <div>
-                    <h1 
-                      data-sanity={attr()}
-                      className="text-4xl md:text-5xl lg:text-6xl font-display font-normal leading-tight tracking-tight text-black mb-6"
-                    >
-                      <Link 
-                        href={`/posts/${slug}`}
-                        className="hover:text-gray-700 transition-colors"
-                      >
-                        {title}
-                      </Link>
-                    </h1>
-
-                    {/* Excerpt */}
-                    {excerpt && (
-                      <p className="text-lg md:text-xl leading-relaxed text-gray-700 font-serif font-light max-w-xl">
-                        {excerpt}
+          return (
+            <article 
+              key={post._id} 
+              className={`group ${index > 0 ? 'border-t border-gray-200 pt-16' : ''}`}
+            >
+              <div className="grid lg:grid-cols-5 gap-8 lg:gap-12 items-start">
+                {/* Left: Image */}
+                {coverImage?.asset && (
+                  <div className="lg:col-span-2 space-y-2">
+                    <Link href={`/posts/${slug}`} className="block">
+                      <div className="relative overflow-hidden bg-gray-100 aspect-[4/3]">
+                        <img
+                          src={urlForImage(coverImage)?.width(800).height(600).fit('crop').url()}
+                          alt={coverImage.alt || title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </Link>
+                    {coverImage.attribution && (
+                      <p className="text-xs text-gray-500 font-mono">
+                        Photo by{' '}
+                        {coverImage.attributionUrl ? (
+                          <a 
+                            href={coverImage.attributionUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="text-gray-700 hover:text-black transition-colors underline"
+                          >
+                            {coverImage.attribution}
+                          </a>
+                        ) : (
+                          <span className="text-gray-700">{coverImage.attribution}</span>
+                        )}
                       </p>
                     )}
                   </div>
+                )}
 
-                  {/* Date only */}
-                  <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-                    {date && (
-                      <div className="text-sm text-gray-600">
-                        <Date dateString={date} />
-                      </div>
-                    )}
+                {/* Right: Content */}
+                <div className={`space-y-4 ${coverImage?.asset ? 'lg:col-span-3' : 'lg:col-span-5'}`}>
+                  {/* Category */}
+                  {category && <Category category={category} />}
+                  
+                  {/* Title */}
+                  <div>
+                    <h2 
+                      data-sanity={attr()}
+                      className="font-serif text-2xl md:text-3xl lg:text-4xl leading-tight tracking-tight text-black group-hover:text-gray-700 transition-colors"
+                    >
+                      <Link href={`/posts/${slug}`}>
+                        {title}
+                      </Link>
+                    </h2>
+                  </div>
+
+                  {/* Excerpt */}
+                  {excerpt && (
+                    <div className="pt-2">
+                      <p className="text-base md:text-lg leading-relaxed text-gray-700 font-serif max-w-2xl">
+                        {excerpt.length > 200 ? `${excerpt.substring(0, 200)}...` : excerpt}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Date, Reading Time and Read More */}
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div className="flex items-center gap-3 text-sm text-gray-600">
+                      {date && <Date dateString={date} />}
+                      {content && (
+                        <>
+                          <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                          <ReadingTime content={content} />
+                        </>
+                      )}
+                    </div>
                     
                     <Link 
                       href={`/posts/${slug}`}
                       className="text-sm font-medium text-black hover:text-gray-700 transition-colors border-b border-black hover:border-gray-700 pb-0.5"
                     >
-                      Read Article →
+                      Read More →
                     </Link>
                   </div>
                 </div>
-
-                {/* Right side - Image */}
-                <div className="relative">
-                  {coverImage?.asset && (
-                    <Link href={`/posts/${slug}`} className="block group focus:outline-none focus-visible:ring-2 focus-visible:ring-black/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm">
-                      <div className="relative overflow-hidden bg-gray-100 aspect-[4/3]">
-                        <img
-                          src={urlForImage(coverImage)?.width(1200).height(900).url() || ''}
-                          alt={coverImage.alt || title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      </div>
-                    </Link>
-                  )}
-                </div>
               </div>
-            </div>
-          </section>
-        )
-      })}
+            </article>
+          )
+        })}
+      </div>
     </div>
   )
 }

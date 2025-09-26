@@ -44,6 +44,18 @@ export const person = defineType({
             })
           },
         }),
+        defineField({
+          name: 'attribution',
+          type: 'string',
+          title: 'Photo Credit',
+          description: 'Name of the photographer or image source (e.g., "Photo by John Doe" or "Unsplash")',
+        }),
+        defineField({
+          name: 'attributionUrl',
+          type: 'url',
+          title: 'Attribution URL',
+          description: 'Optional link to the photographer\'s profile or original image source',
+        }),
       ],
       options: {
         hotspot: true,

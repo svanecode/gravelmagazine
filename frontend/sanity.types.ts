@@ -44,72 +44,164 @@ export type InfoSection = {
   _type: 'infoSection'
   heading?: string
   subheading?: string
-  content?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<{
-      linkType?: 'href' | 'page' | 'post'
-      href?: string
-      page?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'page'
+  content?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>
+          text?: string
+          _type: 'span'
+          _key: string
+        }>
+        style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+        listItem?: 'bullet' | 'number'
+        markDefs?: Array<{
+          linkType?: 'href' | 'page' | 'post'
+          href?: string
+          page?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'page'
+          }
+          post?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'post'
+          }
+          openInNewTab?: boolean
+          _type: 'link'
+          _key: string
+        }>
+        level?: number
+        _type: 'block'
+        _key: string
       }
-      post?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'post'
+    | {
+        asset?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+        }
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        alt: string
+        caption?: string
+        size?: 'small' | 'medium' | 'large' | 'fullBleed'
+        alignment?: 'left' | 'center' | 'right'
+        _type: 'inlineImage'
+        _key: string
       }
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
+    | {
+        images?: Array<{
+          asset?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+          }
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          alt: string
+          caption?: string
+          _type: 'image'
+          _key: string
+        }>
+        layout?: 'grid2' | 'grid3' | 'scroll'
+        _type: 'imageGallery'
+        _key: string
+      }
+    | {
+        quote: string
+        attribution?: string
+        style?: 'large' | 'sidebar'
+        _type: 'pullQuote'
+        _key: string
+      }
+  >
 }
 
-export type BlockContent = Array<{
-  children?: Array<{
-    marks?: Array<string>
-    text?: string
-    _type: 'span'
-    _key: string
-  }>
-  style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
-  listItem?: 'bullet' | 'number'
-  markDefs?: Array<{
-    linkType?: 'href' | 'page' | 'post'
-    href?: string
-    page?: {
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      [internalGroqTypeReferenceTo]?: 'page'
+export type BlockContent = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+      listItem?: 'bullet' | 'number'
+      markDefs?: Array<{
+        linkType?: 'href' | 'page' | 'post'
+        href?: string
+        page?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'page'
+        }
+        post?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'post'
+        }
+        openInNewTab?: boolean
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
     }
-    post?: {
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      [internalGroqTypeReferenceTo]?: 'post'
+  | {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt: string
+      caption?: string
+      size?: 'small' | 'medium' | 'large' | 'fullBleed'
+      alignment?: 'left' | 'center' | 'right'
+      _type: 'inlineImage'
+      _key: string
     }
-    openInNewTab?: boolean
-    _type: 'link'
-    _key: string
-  }>
-  level?: number
-  _type: 'block'
-  _key: string
-}>
+  | {
+      images?: Array<{
+        asset?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+        }
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        alt: string
+        caption?: string
+        _type: 'image'
+        _key: string
+      }>
+      layout?: 'grid2' | 'grid3' | 'scroll'
+      _type: 'imageGallery'
+      _key: string
+    }
+  | {
+      quote: string
+      attribution?: string
+      style?: 'large' | 'sidebar'
+      _type: 'pullQuote'
+      _key: string
+    }
+>
 
 export type Settings = {
   _id: string
@@ -161,6 +253,8 @@ export type Settings = {
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
     alt?: string
+    attribution?: string
+    attributionUrl?: string
     metadataBase?: string
     _type: 'image'
   }
@@ -207,6 +301,8 @@ export type Post = {
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
     alt?: string
+    attribution?: string
+    attributionUrl?: string
     _type: 'image'
   }
   date?: string
@@ -216,6 +312,8 @@ export type Post = {
     _weak?: boolean
     [internalGroqTypeReferenceTo]?: 'person'
   }
+  tags?: Array<string>
+  featured?: boolean
 }
 
 export type Person = {
@@ -237,6 +335,8 @@ export type Person = {
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
     alt?: string
+    attribution?: string
+    attributionUrl?: string
     _type: 'image'
   }
 }
@@ -397,25 +497,25 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: 'sanity.imageDimensions'
-  height?: number
-  width?: number
-  aspectRatio?: number
+  height: number
+  width: number
+  aspectRatio: number
 }
 
 export type SanityImageHotspot = {
   _type: 'sanity.imageHotspot'
-  x?: number
-  y?: number
-  height?: number
-  width?: number
+  x: number
+  y: number
+  height: number
+  width: number
 }
 
 export type SanityImageCrop = {
   _type: 'sanity.imageCrop'
-  top?: number
-  bottom?: number
-  left?: number
-  right?: number
+  top: number
+  bottom: number
+  left: number
+  right: number
 }
 
 export type SanityFileAsset = {
@@ -580,6 +680,8 @@ export type SettingsQueryResult = {
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
     alt?: string
+    attribution?: string
+    attributionUrl?: string
     metadataBase?: string
     _type: 'image'
   }
@@ -614,28 +716,77 @@ export type GetPageQueryResult = {
         _type: 'infoSection'
         heading?: string
         subheading?: string
-        content: Array<{
-          children?: Array<{
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }>
-          style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
-          listItem?: 'bullet' | 'number'
-          markDefs: Array<{
-            linkType?: 'href' | 'page' | 'post'
-            href?: string
-            page: string | null
-            post: string | null
-            openInNewTab?: boolean
-            _type: 'link'
-            _key: string
-          }> | null
-          level?: number
-          _type: 'block'
-          _key: string
-        }> | null
+        content: Array<
+          | {
+              children?: Array<{
+                marks?: Array<string>
+                text?: string
+                _type: 'span'
+                _key: string
+              }>
+              style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
+              listItem?: 'bullet' | 'number'
+              markDefs: Array<{
+                linkType?: 'href' | 'page' | 'post'
+                href?: string
+                page: string | null
+                post: string | null
+                openInNewTab?: boolean
+                _type: 'link'
+                _key: string
+              }> | null
+              level?: number
+              _type: 'block'
+              _key: string
+            }
+          | {
+              images?: Array<{
+                asset?: {
+                  _ref: string
+                  _type: 'reference'
+                  _weak?: boolean
+                  [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+                }
+                media?: unknown
+                hotspot?: SanityImageHotspot
+                crop?: SanityImageCrop
+                alt: string
+                caption?: string
+                _type: 'image'
+                _key: string
+              }>
+              layout?: 'grid2' | 'grid3' | 'scroll'
+              _type: 'imageGallery'
+              _key: string
+              markDefs: null
+            }
+          | {
+              asset?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+              }
+              media?: unknown
+              hotspot?: SanityImageHotspot
+              crop?: SanityImageCrop
+              alt: string
+              caption?: string
+              size?: 'fullBleed' | 'large' | 'medium' | 'small'
+              alignment?: 'center' | 'left' | 'right'
+              _type: 'inlineImage'
+              _key: string
+              markDefs: null
+            }
+          | {
+              quote: string
+              attribution?: string
+              style?: 'large' | 'sidebar'
+              _type: 'pullQuote'
+              _key: string
+              markDefs: null
+            }
+        > | null
       }
   > | null
 } | null
@@ -654,12 +805,13 @@ export type SitemapDataResult = Array<
     }
 >
 // Variable: allPostsQuery
-// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  tags,  featured,  }
+// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content,  }
 export type AllPostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
   title: string
   slug: string
+  category: null
   excerpt: string | null
   coverImage: {
     asset?: {
@@ -672,6 +824,8 @@ export type AllPostsQueryResult = Array<{
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
     alt?: string
+    attribution: string | null
+    attributionUrl: string | null
     _type: 'image'
   }
   date: string
@@ -689,19 +843,23 @@ export type AllPostsQueryResult = Array<{
       hotspot?: SanityImageHotspot
       crop?: SanityImageCrop
       alt?: string
+      attribution: string | null
+      attributionUrl: string | null
       _type: 'image'
     }
   } | null
-  tags: null
-  featured: null
+  tags: Array<string> | null
+  featured: boolean | null
+  content: BlockContent | null
 }>
 // Variable: latestPostQuery
-// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) [0] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  tags,  featured,  }
+// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) [0] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content,  }
 export type LatestPostQueryResult = {
   _id: string
   status: 'draft' | 'published'
   title: string
   slug: string
+  category: null
   excerpt: string | null
   coverImage: {
     asset?: {
@@ -714,6 +872,8 @@ export type LatestPostQueryResult = {
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
     alt?: string
+    attribution: string | null
+    attributionUrl: string | null
     _type: 'image'
   }
   date: string
@@ -731,19 +891,23 @@ export type LatestPostQueryResult = {
       hotspot?: SanityImageHotspot
       crop?: SanityImageCrop
       alt?: string
+      attribution: string | null
+      attributionUrl: string | null
       _type: 'image'
     }
   } | null
-  tags: null
-  featured: null
+  tags: Array<string> | null
+  featured: boolean | null
+  content: BlockContent | null
 } | null
 // Variable: morePostsQuery
-// Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  tags,  featured,  }
+// Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content,  }
 export type MorePostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
   title: string
   slug: string
+  category: null
   excerpt: string | null
   coverImage: {
     asset?: {
@@ -756,6 +920,8 @@ export type MorePostsQueryResult = Array<{
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
     alt?: string
+    attribution: string | null
+    attributionUrl: string | null
     _type: 'image'
   }
   date: string
@@ -773,41 +939,24 @@ export type MorePostsQueryResult = Array<{
       hotspot?: SanityImageHotspot
       crop?: SanityImageCrop
       alt?: string
+      attribution: string | null
+      attributionUrl: string | null
       _type: 'image'
     }
   } | null
-  tags: null
-  featured: null
+  tags: Array<string> | null
+  featured: boolean | null
+  content: BlockContent | null
 }>
 // Variable: postQuery
-// Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{    ...,    markDefs[]{      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }    }  },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  tags,  featured,  }
+// Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{    ...,    markDefs[]{      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }    }  },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content,  }
 export type PostQueryResult = {
-  content: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
-    listItem?: 'bullet' | 'number'
-    markDefs: Array<{
-      linkType?: 'href' | 'page' | 'post'
-      href?: string
-      page: string | null
-      post: string | null
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }> | null
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
+  content: BlockContent | null
   _id: string
   status: 'draft' | 'published'
   title: string
   slug: string
+  category: null
   excerpt: string | null
   coverImage: {
     asset?: {
@@ -820,6 +969,8 @@ export type PostQueryResult = {
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
     alt?: string
+    attribution: string | null
+    attributionUrl: string | null
     _type: 'image'
   }
   date: string
@@ -837,15 +988,62 @@ export type PostQueryResult = {
       hotspot?: SanityImageHotspot
       crop?: SanityImageCrop
       alt?: string
+      attribution: string | null
+      attributionUrl: string | null
       _type: 'image'
     }
   } | null
-  tags: null
-  featured: null
+  tags: Array<string> | null
+  featured: boolean | null
 } | null
 // Variable: featuredPostsQuery
-// Query: *[_type == "post" && featured == true && defined(slug.current)] | order(date desc, _updatedAt desc) [0...2] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  tags,  featured,  }
-export type FeaturedPostsQueryResult = Array<never>
+// Query: *[_type == "post" && featured == true && defined(slug.current)] | order(date desc, _updatedAt desc) [0...2] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content,  }
+export type FeaturedPostsQueryResult = Array<{
+  _id: string
+  status: 'draft' | 'published'
+  title: string
+  slug: string
+  category: null
+  excerpt: string | null
+  coverImage: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    attribution: string | null
+    attributionUrl: string | null
+    _type: 'image'
+  }
+  date: string
+  author: {
+    firstName: string
+    lastName: string
+    picture: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      attribution: string | null
+      attributionUrl: string | null
+      _type: 'image'
+    }
+  } | null
+  tags: Array<string> | null
+  featured: boolean | null
+  content: BlockContent | null
+}>
 // Variable: postPagesSlugs
 // Query: *[_type == "post" && defined(slug.current)]  {"slug": slug.current}
 export type PostPagesSlugsResult = Array<{
@@ -856,6 +1054,9 @@ export type PostPagesSlugsResult = Array<{
 export type PagesSlugsResult = Array<{
   slug: string
 }>
+// Variable: allCategoriesQuery
+// Query: *[_type == "category"] | order(order asc, title asc) {    _id,    title,    slug,    description,    color,    order  }
+export type AllCategoriesQueryResult = Array<never>
 
 // Query TypeMap
 import '@sanity/client'
@@ -864,12 +1065,13 @@ declare module '@sanity/client' {
     '*[_type == "settings"][0]': SettingsQueryResult
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        \n  link {\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n,\n      },\n      _type == "infoSection" => {\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n          }\n        }\n      },\n    },\n  }\n': GetPageQueryResult
     '\n  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult
-    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n  tags,\n  featured,\n\n  }\n': AllPostsQueryResult
-    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) [0] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n  tags,\n  featured,\n\n  }\n': LatestPostQueryResult
-    '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n  tags,\n  featured,\n\n  }\n': MorePostsQueryResult
-    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n    }\n  },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n  tags,\n  featured,\n\n  }\n': PostQueryResult
-    '\n  *[_type == "post" && featured == true && defined(slug.current)] | order(date desc, _updatedAt desc) [0...2] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n  tags,\n  featured,\n\n  }\n': FeaturedPostsQueryResult
+    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content,\n\n  }\n': AllPostsQueryResult
+    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) [0] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content,\n\n  }\n': LatestPostQueryResult
+    '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content,\n\n  }\n': MorePostsQueryResult
+    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n    }\n  },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content,\n\n  }\n': PostQueryResult
+    '\n  *[_type == "post" && featured == true && defined(slug.current)] | order(date desc, _updatedAt desc) [0...2] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content,\n\n  }\n': FeaturedPostsQueryResult
     '\n  *[_type == "post" && defined(slug.current)]\n  {"slug": slug.current}\n': PostPagesSlugsResult
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': PagesSlugsResult
+    '\n  *[_type == "category"] | order(order asc, title asc) {\n    _id,\n    title,\n    slug,\n    description,\n    color,\n    order\n  }\n': AllCategoriesQueryResult
   }
 }
