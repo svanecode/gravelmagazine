@@ -6,10 +6,11 @@ import {Post as PostType, AllPostsQueryResult} from '@/sanity.types'
 import DateComponent from '@/app/components/Date'
 import OnBoarding from '@/app/components/Onboarding'
 import Avatar from '@/app/components/Avatar'
+import {urlForImage} from '@/sanity/lib/utils'
 import {createDataAttribute} from 'next-sanity'
 
 const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
-  const {_id, title, slug, excerpt, date, author} = post
+  const {_id, title, slug, excerpt, date, author, coverImage} = post
 
   const attr = createDataAttribute({
     id: _id,
@@ -21,32 +22,49 @@ const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
     <article
       data-sanity={attr()}
       key={_id}
-      className="group border-b border-gray-200 pb-8 mb-8 last:border-b-0 last:mb-0 last:pb-0"
+      className="group"
     >
       <Link href={`/posts/${slug}`} className="block">
-        <div className="space-y-3">
-          <h3 className="text-xl md:text-2xl font-display font-normal leading-tight group-hover:text-gray-600 transition-colors">
-            {title}
-          </h3>
-
-          {excerpt && (
-            <p className="text-gray-700 leading-relaxed line-clamp-2">
-              {excerpt}
-            </p>
-          )}
-
-          <div className="flex items-center justify-between text-sm">
-            {author && author.firstName && author.lastName && (
-              <div className="flex items-center space-x-2">
-                <Avatar person={author} small={true} />
-                <span className="text-gray-600 font-medium">
-                  {author.firstName} {author.lastName}
-                </span>
+        <div className="space-y-4">
+          {/* Image Section */}
+          <div className="w-full">
+            {coverImage?.asset ? (
+              <div className="relative overflow-hidden bg-gray-100 aspect-[3/2]">
+                <img
+                  src={urlForImage(coverImage)?.width(500).height(333).url()}
+                  alt={coverImage.alt || title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+            ) : (
+              <div className="aspect-[3/2] bg-gray-100 flex items-center justify-center">
+                <div className="text-gray-400 text-center">
+                  <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-xs font-mono">No Image</span>
+                </div>
               </div>
             )}
-            <time className="text-gray-500 font-mono text-xs" dateTime={date}>
-              <DateComponent dateString={date} />
-            </time>
+          </div>
+
+          {/* Content Section */}
+          <div className="space-y-3">
+            <h3 className="text-lg md:text-xl font-display font-normal leading-tight group-hover:text-gray-600 transition-colors">
+              {title}
+            </h3>
+
+            {excerpt && (
+                            <p className="text-gray-700 leading-relaxed line-clamp-3 text-sm font-serif">
+                {post.excerpt}
+              </p>
+            )}
+
+            <div className="flex items-center justify-between text-sm pt-3 border-t border-gray-100">
+              {author && author.firstName && author.lastName && (
+                <Avatar person={author} small={true} date={date} />
+              )}
+            </div>
           </div>
         </div>
       </Link>
@@ -70,13 +88,13 @@ const Posts = ({
           {heading}
         </h2>
         {subHeading && (
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-600 max-w-2xl mx-auto font-serif">
             {subHeading}
           </p>
         )}
       </div>
     )}
-    <div className="max-w-3xl mx-auto">{children}</div>
+    <div className="max-w-6xl mx-auto">{children}</div>
   </div>
 )
 
@@ -99,6 +117,75 @@ export const MorePosts = async ({skip, limit}: {skip: string; limit: number}) =>
   )
 }
 
+// Featured secondary post component (larger layout)
+const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
+  const {_id, title, slug, excerpt, date, author, coverImage} = post
+
+  const attr = createDataAttribute({
+    id: _id,
+    type: 'post',
+    path: 'title',
+  })
+
+  return (
+    <article
+      data-sanity={attr()}
+      className="group mb-16 pb-16 border-b border-gray-200"
+    >
+      <Link href={`/posts/${slug}`} className="block">
+        <div className="grid lg:grid-cols-2 gap-8 items-center">
+          {/* Content Section - Left */}
+          <div className="lg:order-1 space-y-4">
+            <div className="inline-block">
+              <span className="text-xs font-mono tracking-widest uppercase text-gray-500 border-b border-gray-300 pb-1">
+                Editor's Pick
+              </span>
+            </div>
+            
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-normal leading-tight group-hover:text-gray-600 transition-colors">
+              {title}
+            </h2>
+
+            {excerpt && (
+              <p className="text-lg text-gray-700 leading-relaxed">
+                {excerpt}
+              </p>
+            )}
+
+            <div className="flex items-center justify-between pt-4">
+              {author && author.firstName && author.lastName && (
+                <Avatar person={author} date={date} />
+              )}
+            </div>
+          </div>
+
+          {/* Image Section - Right */}
+          <div className="lg:order-2">
+            {coverImage?.asset ? (
+              <div className="relative overflow-hidden bg-gray-100 aspect-[3/2]">
+                <img
+                  src={urlForImage(coverImage)?.width(600).height(400).url()}
+                  alt={coverImage.alt || title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+            ) : (
+              <div className="aspect-[3/2] bg-gray-100 flex items-center justify-center">
+                <div className="text-gray-400 text-center">
+                  <svg className="w-12 h-12 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-sm font-mono">No Image</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </Link>
+    </article>
+  )
+}
+
 export const AllPosts = async () => {
   const {data} = await sanityFetch({query: allPostsQuery})
 
@@ -113,14 +200,23 @@ export const AllPosts = async () => {
     return null
   }
 
+  // Feature the second post prominently, then show the rest
+  const [featuredPost, ...otherPosts] = remainingPosts
+
   return (
     <Posts
       heading="More Articles"
       subHeading="Discover our latest stories, essays, and cultural commentary."
     >
-      {remainingPosts.map((post: any) => (
-        <Post key={post._id} post={post} />
-      ))}
+      {featuredPost && <FeaturedPost post={featuredPost} />}
+      
+      {otherPosts.length > 0 && (
+        <div className="grid md:grid-cols-2 gap-8">
+          {otherPosts.map((post: any) => (
+            <Post key={post._id} post={post} />
+          ))}
+        </div>
+      )}
     </Posts>
   )
 }

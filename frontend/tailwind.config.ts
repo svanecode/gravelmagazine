@@ -97,9 +97,9 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)'],
-        display: ['Playfair Display', 'serif'],
-        mono: ['SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', 'monospace'],
+        serif: ['Source Serif 4', 'serif'],
+        display: ['Cormorant Garamond', 'serif'],
+        mono: ['JetBrains Mono', 'SF Mono', 'Monaco', 'monospace'],
       },
       letterSpacing: {
         'magazine': '0.02em',

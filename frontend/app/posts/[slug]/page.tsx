@@ -67,30 +67,74 @@ export default async function PostPage(props: Props) {
 
   return (
     <>
-      <div className="">
-        <div className="container my-12 lg:my-24 grid gap-12">
-          <div>
-            <div className="pb-6 grid gap-6 mb-6 border-b border-gray-100">
-              <div className="max-w-3xl flex flex-col gap-6">
-                <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-7xl">
+      {/* Hero Section */}
+      <div className="bg-white">
+        <div className="container pt-16 pb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            
+            {/* Content Left */}
+            <div className="order-2 lg:order-1">
+              <div className="max-w-xl">
+                {/* Category/Type */}
+                <div className="mb-6">
+                  <span className="text-xs font-mono tracking-widest uppercase text-gray-500 border-b border-gray-300 pb-1">
+                    Article
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal tracking-tight text-black leading-tight mb-6">
                   {post.title}
-                </h2>
-              </div>
-              <div className="max-w-3xl flex gap-4 items-center">
+                </h1>
+
+                {/* Excerpt */}
+                {post.excerpt && (
+                  <p className="text-lg md:text-xl font-serif font-light text-gray-600 leading-relaxed mb-8">
+                    {post.excerpt}
+                  </p>
+                )}
+
+                {/* Author and Date */}
                 {post.author && post.author.firstName && post.author.lastName && (
-                  <Avatar person={post.author} date={post.date} />
+                  <div className="flex items-center gap-4 pt-6 border-t border-gray-200">
+                    <Avatar person={post.author} date={post.date} />
+                  </div>
                 )}
               </div>
             </div>
-            <article className="gap-6 grid max-w-4xl">
-              <div className="">
-                {post?.coverImage && <CoverImage image={post.coverImage} priority />}
-              </div>
-              {post.content?.length && (
-                <PortableText className="max-w-2xl" value={post.content as PortableTextBlock[]} />
+
+            {/* Image Right */}
+            <div className="order-1 lg:order-2">
+              {post?.coverImage ? (
+                <div className="relative aspect-[4/3] lg:aspect-[5/4] overflow-hidden rounded-sm shadow-lg">
+                  <CoverImage image={post.coverImage} priority />
+                </div>
+              ) : (
+                <div className="aspect-[4/3] lg:aspect-[5/4] bg-gray-100 rounded-sm flex items-center justify-center">
+                  <div className="text-center text-gray-400">
+                    <div className="text-4xl mb-2">📖</div>
+                    <div className="text-sm font-mono tracking-wide uppercase">No Image</div>
+                  </div>
+                </div>
               )}
-            </article>
+            </div>
+
           </div>
+        </div>
+      </div>
+
+      {/* Article Content */}
+      <div className="bg-white border-t border-gray-100">
+        <div className="container py-12 lg:py-16">
+          {/* Article Body */}
+          <article className="max-w-4xl mx-auto">
+            {post.content?.length && (
+              <PortableText 
+                className="magazine-article" 
+                value={post.content as PortableTextBlock[]} 
+              />
+            )}
+          </article>
         </div>
       </div>
       <div className="border-t border-gray-100 bg-gray-50">

@@ -12,7 +12,7 @@ export default function CoverImage(props: CoverImageProps) {
   const {image: source, priority} = props
   const image = source?.asset?._ref ? (
     <Image
-      className="object-cover"
+      className="w-full h-full object-cover"
       width={getImageDimensions(source).width}
       height={getImageDimensions(source).height}
       alt={stegaClean(source?.alt) || ''}
@@ -21,5 +21,5 @@ export default function CoverImage(props: CoverImageProps) {
     />
   ) : null
 
-  return <div className="relative">{image}</div>
+  return <div className="absolute inset-0">{image}</div>
 }

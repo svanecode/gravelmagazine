@@ -56,122 +56,44 @@ export default function Footer() {
 
       {/* Main Footer Content */}
       <div className="container py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="max-w-2xl mx-auto text-center">
           {/* Brand Section */}
-          <div className="md:col-span-1">
-            <Link href="/" className="block mb-4">
-              <h3 className="text-2xl font-display font-normal tracking-wide text-black">
-                GRAVEL
-              </h3>
+          <Link href="/" className="block mb-6">
+            <h3 className="text-3xl font-display font-normal tracking-wide text-black">
+              GRAVEL
+            </h3>
+          </Link>
+          <p className="text-gray-600 leading-relaxed mb-6 font-serif">
+            A contemporary magazine exploring the intersection of art, culture, and ideas.
+          </p>
+          <div className="text-xs font-mono tracking-widest uppercase text-gray-500 mb-8">
+            Art • Culture • Ideas
+          </div>
+
+          {/* Simple Links */}
+          <div className="flex items-center justify-center gap-6 text-sm">
+            <Link href="/about" className="text-gray-600 hover:text-black transition-colors">
+              About
             </Link>
-            <p className="text-gray-600 text-sm leading-relaxed mb-4">
-              A contemporary magazine exploring the intersection of art, culture, and ideas.
-            </p>
-            <div className="text-xs font-mono tracking-wide uppercase text-gray-500">
-              Art • Culture • Ideas
-            </div>
-          </div>
-
-          {/* Sections */}
-          <div>
-            <h4 className="text-sm font-medium tracking-wider uppercase text-black mb-4">
-              Sections
-            </h4>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/art" className="text-gray-600 hover:text-black transition-colors text-sm">
-                  Art
-                </Link>
-              </li>
-              <li>
-                <Link href="/culture" className="text-gray-600 hover:text-black transition-colors text-sm">
-                  Culture
-                </Link>
-              </li>
-              <li>
-                <Link href="/essays" className="text-gray-600 hover:text-black transition-colors text-sm">
-                  Essays
-                </Link>
-              </li>
-              <li>
-                <Link href="/reviews" className="text-gray-600 hover:text-black transition-colors text-sm">
-                  Reviews
-                </Link>
-              </li>
-              <li>
-                <Link href="/archive" className="text-gray-600 hover:text-black transition-colors text-sm">
-                  Archive
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* About */}
-          <div>
-            <h4 className="text-sm font-medium tracking-wider uppercase text-black mb-4">
-              Magazine
-            </h4>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/about" className="text-gray-600 hover:text-black transition-colors text-sm">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/contributors" className="text-gray-600 hover:text-black transition-colors text-sm">
-                  Contributors
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-gray-600 hover:text-black transition-colors text-sm">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link href="/submissions" className="text-gray-600 hover:text-black transition-colors text-sm">
-                  Submissions
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Follow */}
-          <div>
-            <h4 className="text-sm font-medium tracking-wider uppercase text-black mb-4">
-              Follow
-            </h4>
-            <ul className="space-y-3">
-              <li>
-                <a 
-                  href="https://instagram.com" 
-                  className="text-gray-600 hover:text-black transition-all duration-200 text-sm border-b border-transparent hover:border-gray-400 pb-0.5"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="https://twitter.com" 
-                  className="text-gray-600 hover:text-black transition-all duration-200 text-sm border-b border-transparent hover:border-gray-400 pb-0.5"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Twitter
-                </a>
-              </li>
-              <li>
-                <Link href="/newsletter" className="text-gray-600 hover:text-black transition-colors text-sm">
-                  Newsletter
-                </Link>
-              </li>
-              <li>
-                <Link href="/rss" className="text-gray-600 hover:text-black transition-colors text-sm">
-                  RSS Feed
-                </Link>
-              </li>
-            </ul>
+            <Link href="/newsletter" className="text-gray-600 hover:text-black transition-colors">
+              Newsletter
+            </Link>
+            <a 
+              href="https://instagram.com" 
+              className="text-gray-600 hover:text-black transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Instagram
+            </a>
+            <a 
+              href="https://twitter.com" 
+              className="text-gray-600 hover:text-black transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Twitter
+            </a>
           </div>
         </div>
       </div>

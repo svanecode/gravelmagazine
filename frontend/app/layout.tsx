@@ -2,7 +2,7 @@ import './globals.css'
 
 import {SpeedInsights} from '@vercel/speed-insights/next'
 import type {Metadata} from 'next'
-import {Inter} from 'next/font/google'
+
 import {draftMode} from 'next/headers'
 import {VisualEditing, toPlainText} from 'next-sanity'
 import {Toaster} from 'sonner'
@@ -51,8 +51,23 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-const inter = Inter({
-  variable: '--font-inter',
+// Import the new fonts
+import {Source_Serif_4, Cormorant_Garamond, JetBrains_Mono} from 'next/font/google'
+
+const sourceSerif = Source_Serif_4({
+  variable: '--font-serif',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+const cormorant = Cormorant_Garamond({
+  variable: '--font-display',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+const jetbrains = JetBrains_Mono({
+  variable: '--font-mono',
   subsets: ['latin'],
   display: 'swap',
 })
@@ -61,7 +76,7 @@ export default async function RootLayout({children}: {children: React.ReactNode}
   const {isEnabled: isDraftMode} = await draftMode()
 
   return (
-    <html lang="en" className={`${inter.variable} bg-white text-black`}>
+    <html lang="en" className={`${sourceSerif.variable} ${cormorant.variable} ${jetbrains.variable} font-serif bg-white text-black`}>
       <body>
         <div className="min-h-screen">
           {/* The <Toaster> component is responsible for rendering toast notifications used in /app/client-utils.ts and /app/components/DraftModeToast.tsx */}

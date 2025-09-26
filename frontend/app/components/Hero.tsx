@@ -52,7 +52,7 @@ export async function Hero() {
 
               {/* Excerpt */}
               {excerpt && (
-                <p className="text-lg md:text-xl leading-relaxed text-gray-700 font-light max-w-xl">
+                                <p className="text-lg md:text-xl leading-relaxed text-gray-700 font-serif font-light max-w-xl">
                   {excerpt}
                 </p>
               )}
@@ -61,17 +61,7 @@ export async function Hero() {
             {/* Author and Date */}
             <div className="flex items-center justify-between pt-6 border-t border-gray-200">
               {author && author.firstName && author.lastName && (
-                <div className="flex items-center space-x-3">
-                  <Avatar person={author} />
-                  <div>
-                    <p className="text-sm font-medium text-black">
-                      {author.firstName} {author.lastName}
-                    </p>
-                    <time className="text-xs text-gray-500 font-mono" dateTime={date}>
-                      <DateComponent dateString={date} />
-                    </time>
-                  </div>
-                </div>
+                <Avatar person={author} date={date} />
               )}
               
               <Link 
