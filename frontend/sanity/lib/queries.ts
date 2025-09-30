@@ -8,6 +8,7 @@ const postFields = /* groq */ `
   "title": coalesce(title, "Untitled"),
   "slug": slug.current,
   "category": category->{title, slug, color},
+  "relatedRace": relatedRace->{name, slug},
   excerpt,
   coverImage{
     ...,
@@ -18,7 +19,12 @@ const postFields = /* groq */ `
   "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},
   tags,
   featured,
-  content,
+  content[_type == 'block']{
+    ...,
+    children[]{
+      ...
+    }
+  },
 `
 
 const linkReference = /* groq */ `
@@ -125,4 +131,44 @@ export const allCategoriesQuery = defineQuery(`
     color,
     order
   }
+`)
+
+const raceFields = /* groq */ `
+  _id,
+  name,
+  "slug": slug.current,
+  description,
+  coverImage{
+    ...,
+    attribution,
+    attributionUrl
+  },
+  location,
+  website,
+  registrationUrl,
+  distances,
+  terrain,
+  elevationGain,
+  entryFee,
+  editions[] | order(year desc)
+`
+
+export const allRacesQuery = defineQuery(`
+  *[_type == "race" && defined(slug.current)] | order(name asc) {
+    ${raceFields}
+  }
+`)
+
+export const raceQuery = defineQuery(`
+  *[_type == "race" && slug.current == $slug][0] {
+    ${raceFields},
+    "relatedPosts": *[_type == "post" && references(^._id) && defined(slug.current)] | order(date desc) {
+      ${postFields}
+    }
+  }
+`)
+
+export const raceSlugs = defineQuery(`
+  *[_type == "race" && defined(slug.current)]
+  {"slug": slug.current}
 `)

@@ -1,8 +1,9 @@
 import Link from 'next/link'
+import NewsletterSignup from './NewsletterSignup'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
-  
+
   return (
     <footer className="border-t border-gray-200 bg-white">
       {/* Newsletter Section */}
@@ -13,28 +14,7 @@ export default function Footer() {
           <div className="absolute top-1/2 left-0 transform -translate-y-1/2 w-full h-px bg-black"></div>
         </div>
         <div className="container py-16 relative">
-          <div className="max-w-2xl mx-auto text-center">
-            <h3 className="text-2xl md:text-3xl font-display font-normal mb-4 text-black">
-              Stay Connected
-            </h3>
-            <p className="text-gray-600 mb-8 leading-relaxed">
-              Get our latest articles, essays, and cultural commentary delivered to your inbox. 
-              No spam, just thoughtful content.
-            </p>
-            <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto group">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 border border-gray-300 bg-white text-black placeholder-gray-500 focus:outline-none focus:border-black focus:shadow-sm transition-all duration-200"
-              />
-              <button
-                type="submit"
-                className="px-6 py-3 bg-black text-white hover:bg-gray-800 hover:transform hover:-translate-y-0.5 transition-all duration-200 font-medium whitespace-nowrap shadow-sm hover:shadow-md"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
+          <NewsletterSignup />
         </div>
       </div>
 

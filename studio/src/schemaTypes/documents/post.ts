@@ -40,6 +40,13 @@ export const post = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'relatedRace',
+      title: 'Related Race',
+      type: 'reference',
+      to: [{type: 'race'}],
+      description: 'Link this post to a race (for race reports, previews, etc.)',
+    }),
+    defineField({
       name: 'content',
       title: 'Content',
       type: 'blockContent',

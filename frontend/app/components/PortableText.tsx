@@ -9,6 +9,7 @@
  */
 
 import {PortableText, type PortableTextComponents, type PortableTextBlock} from 'next-sanity'
+import Image from 'next/image'
 
 import ResolvedLink from '@/app/components/ResolvedLink'
 import {urlForImage} from '@/sanity/lib/utils'
@@ -111,12 +112,17 @@ export default function CustomPortableText({
 
         const sizeClass = sizeClasses[size] || sizeClasses.large
         const alignmentClass = alignmentClasses[alignment] || alignmentClasses.center
+        const imageUrl = urlForImage(value)?.width(size === 'fullBleed' ? 1200 : size === 'large' ? 800 : size === 'medium' ? 600 : 400).url()
+
+        if (!imageUrl) return null
 
         return (
           <figure className={`my-8 ${size === 'fullBleed' ? '' : sizeClass} ${size === 'fullBleed' ? '' : alignmentClass}`}>
-            <img
-              src={urlForImage(value)?.width(size === 'fullBleed' ? 1200 : size === 'large' ? 800 : size === 'medium' ? 600 : 400).url()}
+            <Image
+              src={imageUrl}
               alt={alt}
+              width={size === 'fullBleed' ? 1200 : size === 'large' ? 800 : size === 'medium' ? 600 : 400}
+              height={size === 'fullBleed' ? 800 : size === 'large' ? 533 : size === 'medium' ? 400 : 267}
               className="w-full h-auto"
             />
             {caption && (
@@ -162,13 +168,19 @@ export default function CustomPortableText({
         return (
           <div className="my-8">
             <div className={layoutClass}>
-              {images.map((image: any, index: number) => (
-                <figure key={index} className={layout === 'scroll' ? 'flex-shrink-0 w-80' : ''}>
-                  <img
-                    src={urlForImage(image)?.width(layout === 'scroll' ? 320 : 400).height(layout === 'scroll' ? 240 : 300).fit('crop').url()}
-                    alt={image.alt}
-                    className="w-full h-auto object-cover aspect-[4/3]"
-                  />
+              {images.map((image: any, index: number) => {
+                const imageUrl = urlForImage(image)?.width(layout === 'scroll' ? 320 : 400).height(layout === 'scroll' ? 240 : 300).fit('crop').url()
+                if (!imageUrl) return null
+
+                return (
+                  <figure key={index} className={layout === 'scroll' ? 'flex-shrink-0 w-80' : ''}>
+                    <Image
+                      src={imageUrl}
+                      alt={image.alt}
+                      width={layout === 'scroll' ? 320 : 400}
+                      height={layout === 'scroll' ? 240 : 300}
+                      className="w-full h-auto object-cover aspect-[4/3]"
+                    />
                   {image.caption && (
                     <figcaption className="mt-2 text-sm text-gray-600 font-serif font-light italic">
                       {image.caption}
@@ -192,7 +204,8 @@ export default function CustomPortableText({
                     </p>
                   )}
                 </figure>
-              ))}
+                )
+              })}
             </div>
           </div>
         )

@@ -805,13 +805,14 @@ export type SitemapDataResult = Array<
     }
 >
 // Variable: allPostsQuery
-// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content,  }
+// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  "relatedRace": relatedRace->{name, slug},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content[_type == 'block']{    ...,    children[]{      ...    }  },  }
 export type AllPostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
   title: string
   slug: string
   category: null
+  relatedRace: null
   excerpt: string | null
   coverImage: {
     asset?: {
@@ -850,16 +851,48 @@ export type AllPostsQueryResult = Array<{
   } | null
   tags: Array<string> | null
   featured: boolean | null
-  content: BlockContent | null
+  content: Array<{
+    children: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }> | null
+    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'post'
+      href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      post?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'post'
+      }
+      openInNewTab?: boolean
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }> | null
 }>
 // Variable: latestPostQuery
-// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) [0] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content,  }
+// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) [0] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  "relatedRace": relatedRace->{name, slug},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content[_type == 'block']{    ...,    children[]{      ...    }  },  }
 export type LatestPostQueryResult = {
   _id: string
   status: 'draft' | 'published'
   title: string
   slug: string
   category: null
+  relatedRace: null
   excerpt: string | null
   coverImage: {
     asset?: {
@@ -898,16 +931,48 @@ export type LatestPostQueryResult = {
   } | null
   tags: Array<string> | null
   featured: boolean | null
-  content: BlockContent | null
+  content: Array<{
+    children: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }> | null
+    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'post'
+      href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      post?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'post'
+      }
+      openInNewTab?: boolean
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }> | null
 } | null
 // Variable: morePostsQuery
-// Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content,  }
+// Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  "relatedRace": relatedRace->{name, slug},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content[_type == 'block']{    ...,    children[]{      ...    }  },  }
 export type MorePostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
   title: string
   slug: string
   category: null
+  relatedRace: null
   excerpt: string | null
   coverImage: {
     asset?: {
@@ -946,17 +1011,80 @@ export type MorePostsQueryResult = Array<{
   } | null
   tags: Array<string> | null
   featured: boolean | null
-  content: BlockContent | null
+  content: Array<{
+    children: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }> | null
+    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'post'
+      href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      post?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'post'
+      }
+      openInNewTab?: boolean
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }> | null
 }>
 // Variable: postQuery
-// Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{    ...,    markDefs[]{      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }    }  },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content,  }
+// Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{    ...,    markDefs[]{      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }    }  },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  "relatedRace": relatedRace->{name, slug},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content[_type == 'block']{    ...,    children[]{      ...    }  },  }
 export type PostQueryResult = {
-  content: BlockContent | null
+  content: Array<{
+    children: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }> | null
+    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'post'
+      href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      post?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'post'
+      }
+      openInNewTab?: boolean
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }> | null
   _id: string
   status: 'draft' | 'published'
   title: string
   slug: string
   category: null
+  relatedRace: null
   excerpt: string | null
   coverImage: {
     asset?: {
@@ -997,13 +1125,14 @@ export type PostQueryResult = {
   featured: boolean | null
 } | null
 // Variable: featuredPostsQuery
-// Query: *[_type == "post" && featured == true && defined(slug.current)] | order(date desc, _updatedAt desc) [0...2] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content,  }
+// Query: *[_type == "post" && featured == true && defined(slug.current)] | order(date desc, _updatedAt desc) [0...2] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  "relatedRace": relatedRace->{name, slug},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content[_type == 'block']{    ...,    children[]{      ...    }  },  }
 export type FeaturedPostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
   title: string
   slug: string
   category: null
+  relatedRace: null
   excerpt: string | null
   coverImage: {
     asset?: {
@@ -1042,7 +1171,38 @@ export type FeaturedPostsQueryResult = Array<{
   } | null
   tags: Array<string> | null
   featured: boolean | null
-  content: BlockContent | null
+  content: Array<{
+    children: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }> | null
+    style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<{
+      linkType?: 'href' | 'page' | 'post'
+      href?: string
+      page?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'page'
+      }
+      post?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'post'
+      }
+      openInNewTab?: boolean
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }> | null
 }>
 // Variable: postPagesSlugs
 // Query: *[_type == "post" && defined(slug.current)]  {"slug": slug.current}
@@ -1057,6 +1217,15 @@ export type PagesSlugsResult = Array<{
 // Variable: allCategoriesQuery
 // Query: *[_type == "category"] | order(order asc, title asc) {    _id,    title,    slug,    description,    color,    order  }
 export type AllCategoriesQueryResult = Array<never>
+// Variable: allRacesQuery
+// Query: *[_type == "race" && defined(slug.current)] | order(name asc) {      _id,  name,  "slug": slug.current,  description,  coverImage{    ...,    attribution,    attributionUrl  },  location,  website,  registrationUrl,  distances,  terrain,  elevationGain,  entryFee,  editions[] | order(year desc)  }
+export type AllRacesQueryResult = Array<never>
+// Variable: raceQuery
+// Query: *[_type == "race" && slug.current == $slug][0] {      _id,  name,  "slug": slug.current,  description,  coverImage{    ...,    attribution,    attributionUrl  },  location,  website,  registrationUrl,  distances,  terrain,  elevationGain,  entryFee,  editions[] | order(year desc),    "relatedPosts": *[_type == "post" && references(^._id) && defined(slug.current)] | order(date desc) {        _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  "category": category->{title, slug, color},  "relatedRace": relatedRace->{name, slug},  excerpt,  coverImage{    ...,    attribution,    attributionUrl  },  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},  tags,  featured,  content[_type == 'block']{    ...,    children[]{      ...    }  },    }  }
+export type RaceQueryResult = null
+// Variable: raceSlugs
+// Query: *[_type == "race" && defined(slug.current)]  {"slug": slug.current}
+export type RaceSlugsResult = Array<never>
 
 // Query TypeMap
 import '@sanity/client'
@@ -1065,13 +1234,16 @@ declare module '@sanity/client' {
     '*[_type == "settings"][0]': SettingsQueryResult
     '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        \n  link {\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n,\n      },\n      _type == "infoSection" => {\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n          }\n        }\n      },\n    },\n  }\n': GetPageQueryResult
     '\n  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult
-    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content,\n\n  }\n': AllPostsQueryResult
-    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) [0] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content,\n\n  }\n': LatestPostQueryResult
-    '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content,\n\n  }\n': MorePostsQueryResult
-    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n    }\n  },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content,\n\n  }\n': PostQueryResult
-    '\n  *[_type == "post" && featured == true && defined(slug.current)] | order(date desc, _updatedAt desc) [0...2] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content,\n\n  }\n': FeaturedPostsQueryResult
+    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  "relatedRace": relatedRace->{name, slug},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content[_type == \'block\']{\n    ...,\n    children[]{\n      ...\n    }\n  },\n\n  }\n': AllPostsQueryResult
+    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) [0] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  "relatedRace": relatedRace->{name, slug},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content[_type == \'block\']{\n    ...,\n    children[]{\n      ...\n    }\n  },\n\n  }\n': LatestPostQueryResult
+    '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  "relatedRace": relatedRace->{name, slug},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content[_type == \'block\']{\n    ...,\n    children[]{\n      ...\n    }\n  },\n\n  }\n': MorePostsQueryResult
+    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n    }\n  },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  "relatedRace": relatedRace->{name, slug},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content[_type == \'block\']{\n    ...,\n    children[]{\n      ...\n    }\n  },\n\n  }\n': PostQueryResult
+    '\n  *[_type == "post" && featured == true && defined(slug.current)] | order(date desc, _updatedAt desc) [0...2] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  "relatedRace": relatedRace->{name, slug},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content[_type == \'block\']{\n    ...,\n    children[]{\n      ...\n    }\n  },\n\n  }\n': FeaturedPostsQueryResult
     '\n  *[_type == "post" && defined(slug.current)]\n  {"slug": slug.current}\n': PostPagesSlugsResult
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': PagesSlugsResult
     '\n  *[_type == "category"] | order(order asc, title asc) {\n    _id,\n    title,\n    slug,\n    description,\n    color,\n    order\n  }\n': AllCategoriesQueryResult
+    '\n  *[_type == "race" && defined(slug.current)] | order(name asc) {\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  location,\n  website,\n  registrationUrl,\n  distances,\n  terrain,\n  elevationGain,\n  entryFee,\n  editions[] | order(year desc)\n\n  }\n': AllRacesQueryResult
+    '\n  *[_type == "race" && slug.current == $slug][0] {\n    \n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  location,\n  website,\n  registrationUrl,\n  distances,\n  terrain,\n  elevationGain,\n  entryFee,\n  editions[] | order(year desc)\n,\n    "relatedPosts": *[_type == "post" && references(^._id) && defined(slug.current)] | order(date desc) {\n      \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  "category": category->{title, slug, color},\n  "relatedRace": relatedRace->{name, slug},\n  excerpt,\n  coverImage{\n    ...,\n    attribution,\n    attributionUrl\n  },\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture{..., attribution, attributionUrl}},\n  tags,\n  featured,\n  content[_type == \'block\']{\n    ...,\n    children[]{\n      ...\n    }\n  },\n\n    }\n  }\n': RaceQueryResult
+    '\n  *[_type == "race" && defined(slug.current)]\n  {"slug": slug.current}\n': RaceSlugsResult
   }
 }

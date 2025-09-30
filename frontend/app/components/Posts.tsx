@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 import {sanityFetch} from '@/sanity/lib/live'
 import {morePostsQuery, allPostsQuery, featuredPostsQuery, latestPostQuery} from '@/sanity/lib/queries'
@@ -32,9 +33,11 @@ const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
             {coverImage?.asset ? (
               <div className="space-y-2">
                 <div className="relative overflow-hidden bg-gray-100 aspect-[3/2]">
-                  <img
-                    src={urlForImage(coverImage)?.width(500).height(333).url()}
+                  <Image
+                    src={urlForImage(coverImage)?.width(500).height(333).url() || ''}
                     alt={coverImage.alt || title}
+                    width={500}
+                    height={333}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -179,9 +182,11 @@ export const RelatedPosts = async ({skip, limit}: {skip: string; limit: number})
               <div className="space-y-2 mb-3">
                 <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-gray-100">
                   {coverImage ? (
-                    <img
-                      src={urlForImage(coverImage)?.width(800).height(600).fit('crop').url()}
+                    <Image
+                      src={urlForImage(coverImage)?.width(800).height(600).fit('crop').url() || ''}
                       alt={coverImage.alt || title || ''}
+                      width={800}
+                      height={600}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -321,9 +326,11 @@ const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
             {coverImage?.asset ? (
               <div className="space-y-2">
                 <div className="relative bg-gray-100 aspect-[4/5] border border-gray-200">
-                  <img
-                    src={urlForImage(coverImage)?.width(500).height(625).fit('crop').url()}
+                  <Image
+                    src={urlForImage(coverImage)?.width(500).height(625).fit('crop').url() || ''}
                     alt={coverImage.alt || title}
+                    width={500}
+                    height={625}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -465,9 +472,11 @@ const LeadStory = ({post}: {post: any}) => {
           {coverImage?.asset && (
             <div className="lg:col-span-2 space-y-2">
               <div className="relative bg-gray-100 aspect-[4/5]">
-                <img
-                  src={urlForImage(coverImage)?.width(400).height(500).fit('crop').url()}
+                <Image
+                  src={urlForImage(coverImage)?.width(400).height(500).fit('crop').url() || ''}
                   alt={coverImage.alt || title}
+                  width={400}
+                  height={500}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -514,9 +523,11 @@ const LargeStory = ({post}: {post: any}) => {
           {coverImage?.asset && (
             <div className="space-y-2">
               <div className="relative bg-gray-100 aspect-[5/3]">
-                <img
-                  src={urlForImage(coverImage)?.width(600).height(360).fit('crop').url()}
+                <Image
+                  src={urlForImage(coverImage)?.width(600).height(360).fit('crop').url() || ''}
                   alt={coverImage.alt || title}
+                  width={600}
+                  height={360}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -589,9 +600,11 @@ const CompactStory = ({post}: {post: any}) => {
           {coverImage?.asset && (
             <div className="space-y-2">
               <div className="relative bg-gray-100 aspect-[4/3]">
-                <img
-                  src={urlForImage(coverImage)?.width(800).height(600).fit('crop').url()}
+                <Image
+                  src={urlForImage(coverImage)?.width(800).height(600).fit('crop').url() || ''}
                   alt={coverImage.alt || title}
+                  width={800}
+                  height={600}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -663,9 +676,11 @@ const MediumStory = ({post, isImageLeft}: {post: any; isImageLeft: boolean}) => 
         {coverImage?.asset && (
           <div className="space-y-2 mb-4">
             <div className="relative bg-gray-100 aspect-[3/2]">
-              <img
-                src={urlForImage(coverImage)?.width(800).height(533).fit('crop').url()}
+              <Image
+                src={urlForImage(coverImage)?.width(800).height(533).fit('crop').url() || ''}
                 alt={coverImage.alt || title}
+                width={800}
+                height={533}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -749,9 +764,11 @@ const ShowcasePost = ({post}: {post: any}) => {
         {coverImage?.asset && (
           <div className="space-y-2 mb-4">
             <div className="relative bg-gray-100 aspect-[3/2]">
-              <img
-                src={urlForImage(coverImage)?.width(800).height(533).fit('crop').url()}
+              <Image
+                src={urlForImage(coverImage)?.width(800).height(533).fit('crop').url() || ''}
                 alt={coverImage.alt || title}
+                width={800}
+                height={533}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -848,9 +865,11 @@ export const AllPosts = async () => {
                   <div className="lg:col-span-2 space-y-2">
                     <Link href={`/posts/${slug}`} className="block">
                       <div className="relative overflow-hidden bg-gray-100 aspect-[4/3]">
-                        <img
-                          src={urlForImage(coverImage)?.width(800).height(600).fit('crop').url()}
+                        <Image
+                          src={urlForImage(coverImage)?.width(800).height(600).fit('crop').url() || ''}
                           alt={coverImage.alt || title}
+                          width={800}
+                          height={600}
                           className="w-full h-full object-cover"
                         />
                       </div>

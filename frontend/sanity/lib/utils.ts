@@ -84,10 +84,10 @@ export function dataAttr(config: DataAttributeConfig) {
 /**
  * Calculate estimated reading time for content
  * @param content - Portable Text content blocks
- * @param wordsPerMinute - Average reading speed (default: 225 words/minute)
+ * @param wordsPerMinute - Average reading speed (default: 200 words/minute)
  * @returns Estimated reading time in minutes
  */
-export function calculateReadingTime(content: any[], wordsPerMinute: number = 225): number {
+export function calculateReadingTime(content: any[], wordsPerMinute: number = 200): number {
   if (!content || !Array.isArray(content)) {
     return 0
   }
@@ -95,7 +95,7 @@ export function calculateReadingTime(content: any[], wordsPerMinute: number = 22
   // Extract text from portable text blocks
   const textContent = content
     .filter((block) => block._type === 'block' && block.children)
-    .map((block) => 
+    .map((block) =>
       block.children
         .filter((child: any) => child._type === 'span' && child.text)
         .map((span: any) => span.text)
@@ -105,10 +105,11 @@ export function calculateReadingTime(content: any[], wordsPerMinute: number = 22
 
   // Count words (simple whitespace-based counting)
   const wordCount = textContent.trim().split(/\s+/).filter(word => word.length > 0).length
-  
-  // Calculate reading time in minutes, with a minimum of 1 minute
-  const readingTime = Math.max(1, Math.ceil(wordCount / wordsPerMinute))
-  
+
+  // Calculate reading time in minutes with rounding
+  // Use Math.round for more accurate estimates, with a minimum of 1 minute
+  const readingTime = Math.max(1, Math.round(wordCount / wordsPerMinute))
+
   return readingTime
 }
 
