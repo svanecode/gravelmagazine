@@ -49,7 +49,7 @@ const RaceCard = ({race}: {race: AllRacesQueryResult[number]}) => {
             {coverImage?.asset ? (
               <div className="relative overflow-hidden bg-gray-100 aspect-[3/2]">
                 <Image
-                  src={urlForImage(coverImage)?.width(500).height(333).url() || ''}
+                  src={urlForImage(coverImage)?.width(500).height(333).fit('crop').url() || ''}
                   alt={coverImage.alt || name}
                   width={500}
                   height={333}

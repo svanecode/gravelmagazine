@@ -13,10 +13,10 @@ export default function CoverImage(props: CoverImageProps) {
   const image = source?.asset?._ref ? (
     <Image
       className="w-full h-full object-cover"
-      width={getImageDimensions(source).width}
-      height={getImageDimensions(source).height}
+      width={1200}
+      height={900}
       alt={stegaClean(source?.alt) || ''}
-      src={urlForImage(source)?.url() as string}
+      src={urlForImage(source)?.width(1200).height(900).fit('crop').url() as string}
       priority={priority}
     />
   ) : null

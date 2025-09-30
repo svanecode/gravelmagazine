@@ -7,7 +7,6 @@ import {raceQuery, raceSlugs} from '@/sanity/lib/queries'
 import {resolveOpenGraphImage, urlForImage} from '@/sanity/lib/utils'
 import CoverImage from '@/app/components/CoverImage'
 import DateComponent from '@/app/components/Date'
-import ReadingTime from '@/app/components/ReadingTime'
 import Category from '@/app/components/Category'
 
 type Props = {
@@ -294,7 +293,7 @@ export default async function RacePage(props: Props) {
                             <div className="relative overflow-hidden bg-gray-100 aspect-[3/2]">
                               <Image
                                 src={
-                                  urlForImage(post.coverImage)?.width(500).height(333).url() || ''
+                                  urlForImage(post.coverImage)?.width(500).height(333).fit('crop').url() || ''
                                 }
                                 alt={post.coverImage.alt || post.title}
                                 width={500}
@@ -323,12 +322,6 @@ export default async function RacePage(props: Props) {
                           <div className="pt-3 border-t border-gray-100">
                             <div className="flex items-center gap-3 text-sm text-gray-600">
                               {post.date && <DateComponent dateString={post.date} />}
-                              {(post as any).content && (
-                                <>
-                                  <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                                  <ReadingTime content={(post as any).content} />
-                                </>
-                              )}
                             </div>
                           </div>
                         </div>

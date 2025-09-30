@@ -6,7 +6,6 @@ import {morePostsQuery, allPostsQuery, featuredPostsQuery, latestPostQuery} from
 import {Post as PostType, AllPostsQueryResult} from '@/sanity.types'
 import DateComponent from '@/app/components/Date'
 import Date from '@/app/components/Date'
-import ReadingTime from '@/app/components/ReadingTime'
 import Category from '@/app/components/Category'
 import OnBoarding from '@/app/components/Onboarding'
 import {urlForImage} from '@/sanity/lib/utils'
@@ -34,7 +33,7 @@ const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
               <div className="space-y-2">
                 <div className="relative overflow-hidden bg-gray-100 aspect-[3/2]">
                   <Image
-                    src={urlForImage(coverImage)?.width(500).height(333).url() || ''}
+                    src={urlForImage(coverImage)?.width(500).height(333).fit('crop').url() || ''}
                     alt={coverImage.alt || title}
                     width={500}
                     height={333}
@@ -90,12 +89,6 @@ const Post = ({post}: {post: AllPostsQueryResult[number]}) => {
             <div className="pt-3 border-t border-gray-100">
               <div className="flex items-center gap-3 text-sm text-gray-600">
                 {date && <Date dateString={date} />}
-                {content && (
-                  <>
-                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                    <ReadingTime content={content} />
-                  </>
-                )}
               </div>
             </div>
           </div>
@@ -238,12 +231,6 @@ export const RelatedPosts = async ({skip, limit}: {skip: string; limit: number})
                 <div className="pt-2 border-t border-gray-100">
                   <div className="flex items-center gap-3 text-sm text-gray-600">
                     {date && <Date dateString={date} />}
-                    {content && (
-                      <>
-                        <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                        <ReadingTime content={content} />
-                      </>
-                    )}
                   </div>
                 </div>
               </div>
@@ -311,12 +298,6 @@ const FeaturedPost = ({post}: {post: AllPostsQueryResult[number]}) => {
               )}
               <div className="flex items-center gap-3 text-sm text-gray-500">
                 {date && <DateComponent dateString={date} />}
-                {content && (
-                  <>
-                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                    <ReadingTime content={content} />
-                  </>
-                )}
               </div>
             </div>
           </div>
@@ -458,12 +439,6 @@ const LeadStory = ({post}: {post: any}) => {
             <div className="pt-4 border-t border-gray-100">
               <div className="flex items-center gap-3 text-sm text-gray-600">
                 {date && <Date dateString={date} />}
-                {content && (
-                  <>
-                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                    <ReadingTime content={content} />
-                  </>
-                )}
               </div>
             </div>
           </div>
@@ -572,12 +547,6 @@ const LargeStory = ({post}: {post: any}) => {
             <div className="pt-4 border-t border-gray-100">
               <div className="flex items-center gap-3 text-sm text-gray-600">
                 {date && <Date dateString={date} />}
-                {content && (
-                  <>
-                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                    <ReadingTime content={content} />
-                  </>
-                )}
               </div>
             </div>
           </div>
@@ -649,12 +618,6 @@ const CompactStory = ({post}: {post: any}) => {
             <div className="pt-2 border-t border-gray-100">
               <div className="flex items-center gap-3 text-sm text-gray-600">
                 {date && <Date dateString={date} />}
-                {content && (
-                  <>
-                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                    <ReadingTime content={content} />
-                  </>
-                )}
               </div>
             </div>
           </div>
@@ -813,12 +776,6 @@ const ShowcasePost = ({post}: {post: any}) => {
           <div className="pt-3 border-t border-gray-100">
             <div className="flex items-center gap-3 text-sm text-gray-600">
               {date && <Date dateString={date} />}
-              {content && (
-                <>
-                  <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                  <ReadingTime content={content} />
-                </>
-              )}
             </div>
           </div>
         </div>
@@ -920,16 +877,10 @@ export const AllPosts = async () => {
                     </div>
                   )}
 
-                  {/* Date, Reading Time and Read More */}
+                  {/* Date and Read More */}
                   <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                     <div className="flex items-center gap-3 text-sm text-gray-600">
                       {date && <Date dateString={date} />}
-                      {content && (
-                        <>
-                          <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                          <ReadingTime content={content} />
-                        </>
-                      )}
                     </div>
                     
                     <Link 

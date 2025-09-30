@@ -4,7 +4,6 @@ import {urlForImage} from '@/sanity/lib/utils'
 import {sanityFetch} from '@/sanity/lib/live'
 import {latestPostQuery} from '@/sanity/lib/queries'
 import DateComponent from '@/app/components/Date'
-import ReadingTime from '@/app/components/ReadingTime'
 import Category from '@/app/components/Category'
 import {createDataAttribute} from 'next-sanity'
 
@@ -66,16 +65,10 @@ export async function Hero() {
               )}
             </div>
 
-            {/* Date, Reading Time and Read More */}
+            {/* Date and Read More */}
             <div className="flex items-center justify-between pt-6 border-t border-gray-200">
               <div className="flex items-center gap-3 text-sm text-gray-600">
                 {date && <DateComponent dateString={date} />}
-                {content && (
-                  <>
-                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                    <ReadingTime content={content} />
-                  </>
-                )}
               </div>
               
               <Link 
@@ -94,12 +87,12 @@ export async function Hero() {
                 <Link href={`/posts/${slug}`} className="block group focus:outline-none focus-visible:ring-2 focus-visible:ring-black/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm">
                   <div className="relative overflow-hidden bg-gray-100 aspect-[4/3]">
                     <Image
-                      src={urlForImage(coverImage)?.width(1200).height(900).url() || ''}
+                      src={urlForImage(coverImage)?.width(1200).height(900).fit('crop').url() || ''}
                       alt={coverImage.alt || title}
                       fill
                       sizes="(max-width: 1024px) 100vw, 50vw"
                       placeholder="blur"
-                      blurDataURL={urlForImage(coverImage)?.width(20).height(15).blur(40).url()}
+                      blurDataURL={urlForImage(coverImage)?.width(20).height(15).fit('crop').blur(40).url()}
                       className="object-cover"
                       priority
                     />

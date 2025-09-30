@@ -112,7 +112,7 @@ export default function CustomPortableText({
 
         const sizeClass = sizeClasses[size] || sizeClasses.large
         const alignmentClass = alignmentClasses[alignment] || alignmentClasses.center
-        const imageUrl = urlForImage(value)?.width(size === 'fullBleed' ? 1200 : size === 'large' ? 800 : size === 'medium' ? 600 : 400).url()
+        const imageUrl = urlForImage(value)?.width(size === 'fullBleed' ? 1200 : size === 'large' ? 800 : size === 'medium' ? 600 : 400).fit('crop').url()
 
         if (!imageUrl) return null
 

@@ -7,8 +7,8 @@ import Avatar from '@/app/components/Avatar'
 import CoverImage from '@/app/components/CoverImage'
 import {RelatedPosts} from '@/app/components/Posts'
 import PortableText from '@/app/components/PortableText'
-import ReadingTime from '@/app/components/ReadingTime'
 import Category from '@/app/components/Category'
+import DateComponent from '@/app/components/Date'
 import {sanityFetch} from '@/sanity/lib/live'
 import {postPagesSlugs, postQuery} from '@/sanity/lib/queries'
 import {resolveOpenGraphImage} from '@/sanity/lib/utils'
@@ -102,16 +102,15 @@ export default async function PostPage(props: Props) {
                   </p>
                 )}
 
-                {/* Author, Date and Reading Time */}
-                <div className="pt-6 border-t border-gray-200 space-y-4">
-                  {post.author && post.author.firstName && post.author.lastName && (
+                {/* Author and Date */}
+                <div className="pt-6 border-t border-gray-200">
+                  {post.author && post.author.firstName && post.author.lastName ? (
                     <Avatar person={post.author} date={post.date} />
-                  )}
-                  {post.content && (
+                  ) : post.date ? (
                     <div className="text-sm text-gray-600">
-                      <ReadingTime content={post.content} />
+                      <DateComponent dateString={post.date} />
                     </div>
-                  )}
+                  ) : null}
                 </div>
               </div>
             </div>

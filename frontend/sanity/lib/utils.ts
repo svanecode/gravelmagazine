@@ -15,27 +15,11 @@ export const urlForImage = (source: any) => {
     return undefined
   }
 
-  const imageRef = source?.asset?._ref
-  const crop = source.crop
+  const builder = imageBuilder?.image(source).auto('format')
 
-  // get the image's og dimensions
-  const {width, height} = getImageDimensions(imageRef)
-
-  if (Boolean(crop)) {
-    // compute the cropped image's area
-    const croppedWidth = Math.floor(width * (1 - (crop.right + crop.left)))
-
-    const croppedHeight = Math.floor(height * (1 - (crop.top + crop.bottom)))
-
-    // compute the cropped image's position
-    const left = Math.floor(width * crop.left)
-    const top = Math.floor(height * crop.top)
-
-    // gather into a url
-    return imageBuilder?.image(source).rect(left, top, croppedWidth, croppedHeight).auto('format')
-  }
-
-  return imageBuilder?.image(source).auto('format')
+  // If hotspot is present, it will be automatically used by the image builder
+  // when using fit modes like 'crop' or when specifying dimensions
+  return builder
 }
 
 export function resolveOpenGraphImage(image: any, width = 1200, height = 627) {
@@ -81,43 +65,3 @@ export function dataAttr(config: DataAttributeConfig) {
   }).combine(config)
 }
 
-/**
- * Calculate estimated reading time for content
- * @param content - Portable Text content blocks
- * @param wordsPerMinute - Average reading speed (default: 200 words/minute)
- * @returns Estimated reading time in minutes
- */
-export function calculateReadingTime(content: any[], wordsPerMinute: number = 200): number {
-  if (!content || !Array.isArray(content)) {
-    return 0
-  }
-
-  // Extract text from portable text blocks
-  const textContent = content
-    .filter((block) => block._type === 'block' && block.children)
-    .map((block) =>
-      block.children
-        .filter((child: any) => child._type === 'span' && child.text)
-        .map((span: any) => span.text)
-        .join(' ')
-    )
-    .join(' ')
-
-  // Count words (simple whitespace-based counting)
-  const wordCount = textContent.trim().split(/\s+/).filter(word => word.length > 0).length
-
-  // Calculate reading time in minutes with rounding
-  // Use Math.round for more accurate estimates, with a minimum of 1 minute
-  const readingTime = Math.max(1, Math.round(wordCount / wordsPerMinute))
-
-  return readingTime
-}
-
-/**
- * Format reading time for display
- * @param minutes - Reading time in minutes
- * @returns Formatted string like "5 min read" or "1 min read"
- */
-export function formatReadingTime(minutes: number): string {
-  return `${minutes} min read`
-}
